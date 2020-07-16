@@ -23,13 +23,16 @@
                 <tr>
                     <th>Producto</th>
                     <th>Ingreso</th>
+                    <th>Cantidad</th>
                     <th>Fecha</th>
+                    
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="item in tabIngresos" :key="item._id" >
                     <td>{{item.Productos}}</td>
                     <td>{{formatNumber(item.Precio)}}</td>
+                     <td>{{item.Cantidad}}</td>
                     <td>{{formatDate(item.Fecha)}}</td>
                 </tr>
             </tbody>
@@ -49,13 +52,16 @@
                 <tr>
                     <th>Producto</th>
                     <th>Egreso</th>
+                    <th>Cantidad</th>
                     <th>Fecha</th>
+                    
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="item in tabEgresos" :key="item._id" >
                     <td>{{item.Productos}}</td>
                     <td>{{formatNumber(item.Precio)}}</td>
+                    <td>{{item.Cantidad}}</td>
                     <td>{{formatDate(item.Fecha)}}</td>
                 </tr>
             </tbody>
@@ -75,6 +81,7 @@
                 <tr>
                     <th>Producto</th>
                     <th>Deuda</th>
+                    <th>Cantidad</th>
                     <th>Fecha</th>
                 </tr>
             </thead>
@@ -82,6 +89,7 @@
                 <tr v-for="item in tabDeuda" :key="item._id" >
                     <td>{{item.Productos}}</td>
                     <td>{{formatNumber(item.Precio)}}</td>
+                    <td>{{item.Cantidad}}</td>
                     <td>{{formatDate(item.Fecha)}}</td>
                 </tr>
             </tbody>
@@ -137,7 +145,6 @@ export default {
             return a.Categoria == "Ingresos"
           })
          
-          console.log(filtroI);
           this.tabIngresos = filtroI;
           
           var filtroE = this.usuario.Actividad.filter(a=>{
