@@ -19,7 +19,7 @@
           </router-link>
 
 
-           <router-link to="/usuarios">
+           <router-link to="/api/user">
             <span class="icon is-small">
             <i class="fas fa-users"></i>
             </span>
