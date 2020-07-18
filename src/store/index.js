@@ -23,7 +23,7 @@ export default new Vuex.Store({
         changeFecha(state,value){
             state.Fecha = value;
             var data = `{"Fecha":{"$gte":"${state.Fecha[1]}-${state.Fecha[0]}","$lte":"${state.Fecha[1]}-${state.Fecha[0]}-31"}}`;
-             axios.post("/getDate",{
+             axios.post("getDate",{
                  data
                 })
             .then((result)=>{
@@ -35,7 +35,7 @@ export default new Vuex.Store({
         },
 
         loadDataBaseUser(state){
-            axios.get("/user")
+            axios.get("user")
             .then((result)=>{
                 state.DataBaseUser = result.data;
             });

@@ -27,7 +27,7 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "ingresos" */ '../views/Mapa.vue')
   },
   {
-    path: '/api/user',
+    path: '/usuarios',
     name: 'usurios',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
