@@ -23,7 +23,7 @@ Vue.use(VueAxios, axios);
 Vue.use(VModal);
 Vue.component('downloadCsv', JsonCSV);
 
-axios.defaults.baseURL= "http://ec2-3-128-34-113.us-east-2.compute.amazonaws.com/api";
+axios.defaults.baseURL= "http://ec2-3-128-34-113.us-east-2.compute.amazonaws.com:3000/api";
 
 
 Vue.config.productionTip = false;
