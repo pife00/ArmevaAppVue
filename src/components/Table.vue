@@ -44,7 +44,7 @@
       </div>
     </form>
 
-    <table class="table">
+    <table id="RegistroTablas" class="table is-fullwidth">
       <thead>
         <tr>
           <th>Nombre</th>
@@ -63,7 +63,9 @@
           <td>{{item.Cantidad}}</td>
           <td>{{formatDate(item.Fecha)}}</td>
           <td>
-            <a
+            <div class="columns ">
+              <div class="column is-3">
+                 <a
               v-on:click="showModalUniversal(
                 item._id,item.Nombre,item.Productos,
                 item.Precio,item.Cantidad,item.Categoria,item.Fecha)"
@@ -74,14 +76,18 @@
                 <i class="fas fa-edit"></i>
               </span>
             </a>
-          </td>
-          <td>
-            <a v-on:click="showModalDetele(item.Nombre,item.Precio,item._id)" class="button is-white">
+              </div>
+              <div class="column is-3">
+                <a v-on:click="showModalDetele(item.Nombre,item.Precio,item._id)" class="button is-white">
               <span class="icon is-small">
                 <i class="fas fa-trash-alt"></i>
               </span>
             </a>
+              </div>
+             
+            </div>
           </td>
+
         </tr>
       </tbody>
       <tfoot>

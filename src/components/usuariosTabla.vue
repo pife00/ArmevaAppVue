@@ -13,7 +13,7 @@
     <fade-transition>
       <div class="box" v-show="showTable">
         
-        <table class="table is-bordered is-striped is-fullwidth">
+        <table id="usuariosTabla" class="table is-bordered is-striped is-fullwidth">
       <thead style="$orange">
         <tr>
           <th>Nombre</th>

@@ -1,15 +1,10 @@
 <template>
   <div>
     
-    <download-csv
-    class="button"
-    :data   = "user()">
-    Download Data
-    >
-</download-csv>
+    
     <div class="columns is-mobile">
       <div class="column">
-        <h1 class="title">Resumen</h1>
+        <h1 class="title 3">Resumen</h1>
       </div>
       <div class="column">
         <p class="subtitle">Fecha</p>
@@ -30,7 +25,7 @@
             <option value="12">Diciembre</option>
           </select>
         </div>
-        <div style="padding-left:5px" class="select is-dark">
+        <div class="select is-dark">
           <select v-model="Fecha[1]" class="input">
             <option value="2020">2020</option>
             <option value="2021">2021</option>
@@ -277,29 +272,8 @@ export default {
           categoria + " " + new Intl.DateTimeFormat().format(fecha)
         ];
       }
-
-      /*if (filtro.length > 0) {
-        var noRepeat = [...new Set(filtro.map(a => a[criterio]))];
-
-        for (let i = 0; i < noRepeat.length; i++) {
-          if (noRepeat[i] != "") {
-            for (let j = 0; j < filtro.length; j++) {
-              if (noRepeat[i] == filtro[j][criterio]) {
-                var values = this.unique(filtro, valor, noRepeat[i], criterio);
-                ultimateFilter[i] = { Nombre: values[0], [valor]: values[1] };
-              }
-            }
-          }
-        }
-
-        ultimateFilter = ultimateFilter.sort(function(a, b) {
-          return b[valor] - a[valor];
-        });
-
-      } else {
-        return ["0", 0];
-      }*/
     },
+
 
     formatDate(data) {
       var fecha = [{}];
@@ -533,3 +507,7 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+
+</style>

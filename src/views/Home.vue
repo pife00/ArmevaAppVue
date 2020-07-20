@@ -1,11 +1,9 @@
 <template>
-  <div class="home">
-    <div class="columns is-mobile">
-      <div class="column is-three-fifths is-offset-one-fifth">  
+ 
+      <div class="column">  
         <Resumen :balance="DataBase"></Resumen>
       </div>
-    </div>
-  </div>
+    
 </template>
 
 <script>

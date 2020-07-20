@@ -42,46 +42,11 @@ export default {
 };
 </script>
 
-<style>
-@import "../node_modules/bulma/css/bulma.min.css";
-.modal-wrap {
-  background-color: white;
-  margin-top: 2%;
-  top: 20%;
-}
-
-.universal-modal{
-    padding-left: 15px;
-    padding-right: 20px;
-}
-.categoria {
-  border-color: #dbdbdb;
-}
-.ingresos{
-  color: #02AC1E;
-}
-.egresos{
-  color: red;
-}
-.balance{
-  color:cornflowerblue;
-}
-
-.breadcrumb a{
-  color: black;
-}
-
-.breadcrumb a.router-link-exact-active{
-  color: #02AC1E;
-;
-}
-a{
-  color: #038118;
-  font-style: oblique;
-}
-
-
-
-
+<style lang="scss">
+@import "bulma";
+@import "../node_modules/bulma/sass/utilities/initial-variables.sass";
+@import "@/sass/_media.scss";
+@import "@/sass/_variables.scss";
+@import "@/sass/_resumen.scss";
 
 </style>
