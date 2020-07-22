@@ -1,6 +1,6 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import axios from 'axios'
+import Vue from 'vue';
+import Vuex from 'vuex';
+import axios from 'axios';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -9,7 +9,10 @@ export default new Vuex.Store({
         DataBaseUser: [],
         DataBaseUserSelect: [],
         querry: [],
-        Fecha: [new Date().getMonth() + 1, new Date().getFullYear()]
+        Fecha: [new Date().getMonth() + 1, new Date().getFullYear()],
+        ModalAñadir:false,
+        ModalEditar:false,
+        ModalUsuario:false,
 
     },
     actions: {
@@ -39,6 +42,10 @@ export default new Vuex.Store({
                 .then((result) => {
                     state.DataBaseUser = result.data;
                 });
+        },
+
+        modalUp(){
+            state.ModalU = true;
         },
 
 

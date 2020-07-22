@@ -25,7 +25,7 @@
             <option value="12">Diciembre</option>
           </select>
         </div>
-        <div class="select is-dark">
+        <div class="select is-dark Año">
           <select v-model="Fecha[1]" class="input">
             <option value="2020">2020</option>
             <option value="2021">2021</option>

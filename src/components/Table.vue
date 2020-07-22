@@ -99,7 +99,8 @@
       </tfoot>
     </table>
 
-    <Modal_Universal :Modo="Modo" :user="DatosEdit" ></Modal_Universal>
+    
+    <fade-transition><Modal_AU v-if="$store.state.ModalEditar"  :Modo="Modo" :user="DatosEdit"  ></Modal_AU></fade-transition>
 
     <modal :width="350" :height="200" name="delete">
       <div class="columns is-mobile">
@@ -124,11 +125,14 @@
 
 <script>
 import { mapState } from "vuex";
-import Modal_Universal from "./Modal_Universal"
+import { FadeTransition } from "vue2-transitions";
+import Modal_AU from "./Modal_AU"
+import store from "../store/index";
 export default {
   name: "Table",
   components: {
-    Modal_Universal
+    Modal_AU,
+    FadeTransition,
   },
   props: {
     usuarios: Array
@@ -153,16 +157,9 @@ export default {
       ModalId:"",
       optionCheck: [],
       usuariosReserva: [],
-      Modo: "Actualizar"
+      Modo: "Actualizar",
+      showModal:false
     };
-  },
-
-  created() {
-    
-   },
-
-  computed: {
-   
   },
 
   watch: {
@@ -282,7 +279,8 @@ export default {
       this.DatosEdit.Cantidad = Cantidad;
       this.DatosEdit.Categoria = Categoria;
       this.DatosEdit.Fecha = Fecha;
-      this.$modal.show(this.Modo)
+      store.state.ModalEditar = true;
+     
     }
   }
 };

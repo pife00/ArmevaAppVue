@@ -48,5 +48,7 @@ export default {
 @import "@/sass/_media.scss";
 @import "@/sass/_variables.scss";
 @import "@/sass/_resumen.scss";
+@import "@/sass/_modal.scss";
+
 
 </style>

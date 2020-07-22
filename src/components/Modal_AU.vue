@@ -1,10 +1,17 @@
 <template>
-  <modal width="60%" height="80%"   :name="Modo">
-    <div class="column Modal">
-      <h1 style="margin-top:15px" class="title">{{Modo}}</h1>
-      <div class="field">
-          
+<div id="mymodal" class="modal is-active">
+  <div @click="closeModal()" class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">{{Modo}}</p>
+      <button @click="closeModal()" class="delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+
+        <div class="field">
+
         <div class="control">
+             <label class="label">Categoria</label>
           <input
             v-model="Datos.Categoria"
             name="Categoria"
@@ -13,8 +20,10 @@
             value="Ingresos"
           />
         </div>
+        </div>
 
-        <div class="field">
+
+     <div class="field">
           <label class="label">Nombre</label>
           <div class="control">
             <input
@@ -61,16 +70,18 @@
           </div>
         </div>
 
-        <div class="control">
-          <button @click="SendData()" type="submit" class="button is-primary">{{Modo}}</button>
-        </div>
-      </div>
-    </div>
-  </modal>
+    </section>
+    <footer class="modal-card-foot">
+      <button @click="SendData()" class="button is-success">{{Modo}}</button>
+      <button  @click="closeModal()" class="button">Cancelar</button>
+    </footer>
+  </div>
+</div>
 </template>
 <script>
+import store from "../store/index";
 export default {
-  props: {
+    props: {
     Modo: String,
     user: Object
   },
@@ -79,7 +90,8 @@ export default {
       Datos: []
     };
   },
-  computed: {
+
+   computed: {
     count() {
       this.Datos = this.user;
     }
@@ -90,9 +102,15 @@ export default {
 
   methods: {
     closeModal() {
-      document.getElementById(this.Modo).style.display = "none";
+      if(this.Modo == "Añadir"){
+        store.state.ModalAñadir = false; 
+      }
+      if(this.Modo == "Actualizar"){
+        store.state.ModalEditar = false;   
+      }
+     
+      
     },
-
     SendData() {
       if (this.Modo == "Añadir") {
         this.axios
@@ -111,7 +129,7 @@ export default {
             this.Datos.Precio = "";
             this.Datos.Cantidad = "";
             this.Datos.Categoria = "";
-            this.$modal.hide("Añadir")
+            this.closeModal()
           })
           .catch(err => {});
       }
@@ -133,7 +151,7 @@ export default {
             this.Datos.Precio = "";
             this.Datos.Cantidad = ""
             this.Datos.Categoria = "";
-            this.$modal.hide("Actualizar")
+            this.closeModal()
           })
           .catch(err => {});
       }

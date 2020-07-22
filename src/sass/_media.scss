@@ -1,4 +1,10 @@
 @media only screen and (max-width: $tablet) {
+
+  .modal-content{
+    .input{
+      
+    }
+  }
     table#RegistroTablas th:nth-child(4),
     th:nth-child(5),th:nth-child(6){
       display: none;
@@ -15,6 +21,10 @@
     td:nth-child(4){
       display: none;
     }
+
+    .Año{
+      padding-top: 5px;;
+    }
   }
 
   @media only screen and (min-width: $desktop) {
@@ -22,6 +32,10 @@
       display: flex;
       justify-content: center;
     }
+    .Año{
+      padding-left: 5px;;
+    }
+    
   }
 
 

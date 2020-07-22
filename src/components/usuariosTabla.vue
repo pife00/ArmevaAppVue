@@ -10,6 +10,11 @@
         >Añadir</button>
       </p>
     </div>
+
+    <fade-transition>
+     <Modal_Usuarios v-if="$store.state.ModalUsuario" :Modo="Modo"></Modal_Usuarios>
+    </fade-transition>
+
     <fade-transition>
       <div class="box" v-show="showTable">
         
@@ -45,7 +50,9 @@
       </div>
     </fade-transition>
     
-    <Modal_Usuarios :Modo="Modo"></Modal_Usuarios>
+    
+    
+    
 
     <fade-transition>
       <div class="box" v-show="showUser">
@@ -99,7 +106,8 @@ export default {
   components: {
     Modal_Usuarios,
     FadeTransition,
-    Tabs
+    Tabs,
+    
   },
   data() {
     return {
@@ -119,7 +127,7 @@ export default {
   },
   methods: {
     showModalUsuariosAñadir() {
-      this.$modal.show(this.Modo);
+      store.state.ModalUsuario = true
     },
 
     usuarioActivo(_id, Nombre, Telefono, Direccion, Oficio,Actividad) {

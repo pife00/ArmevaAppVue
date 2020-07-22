@@ -23,7 +23,7 @@
                 <tr>
                     <th>Producto</th>
                     <th>Ingreso</th>
-                    <th>Cantidad</th>
+                    <th>#</th>
                     <th>Fecha</th>
                     
                 </tr>
@@ -52,7 +52,7 @@
                 <tr>
                     <th>Producto</th>
                     <th>Egreso</th>
-                    <th>Cantidad</th>
+                    <th>#</th>
                     <th>Fecha</th>
                     
                 </tr>
@@ -81,7 +81,7 @@
                 <tr>
                     <th>Producto</th>
                     <th>Deuda</th>
-                    <th>Cantidad</th>
+                    <th>#</th>
                     <th>Fecha</th>
                 </tr>
             </thead>
