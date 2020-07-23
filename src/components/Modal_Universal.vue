@@ -101,7 +101,8 @@ export default {
             Productos: this.Datos.Productos,
             Precio: this.Datos.Precio,
             Cantidad: this.Datos.Cantidad,
-            Categoria: this.Datos.Categoria
+            Categoria: this.Datos.Categoria,
+            Telefono:"0"
           })
           .then(result => {
             console.log(result.data);

@@ -1,7 +1,7 @@
 <template>
  
       <div class="column">  
-        <Resumen :balance="DataBase"></Resumen>
+        <Resumen :user="DataBaseUser" :balance="DataBase"></Resumen>
       </div>
     
 </template>
@@ -26,9 +26,11 @@ export default {
 
    created() {
      store.commit("loadDataBase");
+     store.commit("loadDataBaseUser");
    },
   computed: {
-    ...mapState(["DataBase"])
+    ...mapState(["DataBase","DataBaseUser"])
+    
   },
   methods: {
   },

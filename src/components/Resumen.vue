@@ -1,7 +1,5 @@
 <template>
   <div>
-    
-    
     <div class="columns is-mobile">
       <div class="column">
         <h1 class="title 3">Resumen</h1>
@@ -158,14 +156,14 @@
       <div class="column">
         <h1 class="title">Deudores</h1>
         <div class="has-text-right">
-          <export-excel
+        <export-excel
             class="button"
-            :data="descargas('','','Deuda')[0]"
+            :data="descargasDeuda('Deuda')[0]"
             worksheet="Datos"
-            :name="descargas('','','Deuda')[1]"
-          >
-            <i class="fas fa-file-download"></i>
+            :name="descargasDeuda('Deuda')[1]"            
+          ><i class="fas fa-file-download"></i>
           </export-excel>
+
         </div>
         <column-chart
           :colors="['#C0D1CE']"
@@ -236,7 +234,8 @@ export default {
   store,
   components: {},
   props: {
-    balance: Array
+    balance: Array,
+    user: Array,
   },
   data() {
     return {
@@ -245,35 +244,78 @@ export default {
       TotalIngresos: [],
       TotalEgresos: [],
       TotalDeudas: [],
-      TotalUltimate: []
+      TotalUltimate: [],
+      data:[{Nombre:"FElipe"}]
     };
   },
 
   watch: {
     Fecha(value) {
       this.changeFecha(value);
-    }
+    },
   },
 
-  created() {},
+  created() {
+    store.commit("loadDataBaseUser");
+  },
 
   methods: {
     descargas(valor, criterio, categoria) {
-     
-     var ultimateFilter = [];
+      var p = 0;
+      var ultimateFilter = [];
 
       if (this.balance.length > 0) {
-        var filtro = this.balance.filter(data => {
+        var filtro = this.balance.filter((data) => {
           return data.Categoria == categoria;
         });
+
+        if (categoria == "Deuda") {
+          for (let i = 0; i < filtro.length; i++) {
+            for (let j = 0; j < this.user.length; j++) {
+              if (filtro[i].Nombre == this.user[j].Nombre) {
+                filtro[i].Telefono = this.user[j].Telefono;
+              }
+            }
+          }
+        }
+
         var fecha = new Date();
+
         return [
           filtro,
-          categoria + " " + new Intl.DateTimeFormat().format(fecha)
+          categoria + " " + new Intl.DateTimeFormat().format(fecha),
         ];
       }
     },
 
+    descargasDeuda(categoria) {
+      var p = 0;
+      var filtro = [];
+      var ultimateFilter = [];
+
+      if (this.balance.length > 0) {
+        filtro = this.balance.filter((data) => {
+          return data.Categoria == categoria;
+        });
+
+        for (let i = 0; i < filtro.length; i++) {
+          for (let j = 0; j < this.user.length; j++) {
+            if (filtro[i].Nombre == this.user[j].Nombre) {
+               filtro[i].Telefono = this.user[j].Telefono;
+            }
+           
+          }
+        }
+
+        var fecha = new Date();
+        console.log(filtro);
+
+       return [
+          filtro,
+          categoria + " " + new Intl.DateTimeFormat().format(fecha),
+        ];
+      }
+    },
 
     formatDate(data) {
       var fecha = [{}];
@@ -286,7 +328,7 @@ export default {
         minute: "numeric",
         second: "numeric",
         hour12: false,
-        timeZone: "America/Bogota"
+        timeZone: "America/Bogota",
       };
       return (fecha = new Intl.DateTimeFormat("es-Co", options).format(
         new Date(data)
@@ -297,7 +339,7 @@ export default {
       var msg = "No Data";
       if (data.length > 0) {
         var element = 0;
-        var filtro = data.filter(fil => {
+        var filtro = data.filter((fil) => {
           return fil.Categoria == value;
         });
         for (let i = 0; i < filtro.length; i++) {
@@ -315,7 +357,7 @@ export default {
       if (typeof data == "number") {
         Number = Intl.NumberFormat("es-CO", {
           style: "currency",
-          currency: "COP"
+          currency: "COP",
         }).format(data);
 
         return Number;
@@ -327,12 +369,12 @@ export default {
       var ultimateFilter = [];
       var filtro = [];
 
-      filtro = this.balance.filter(data => {
+      filtro = this.balance.filter((data) => {
         return data.Categoria == categoria;
       });
 
       if (filtro.length > 0) {
-        var noRepeat = [...new Set(filtro.map(a => a[criterio]))];
+        var noRepeat = [...new Set(filtro.map((a) => a[criterio]))];
 
         for (let i = 0; i < noRepeat.length; i++) {
           if (noRepeat[i] != "") {
@@ -345,7 +387,7 @@ export default {
           }
         }
 
-        ultimateFilter = ultimateFilter.sort(function(a, b) {
+        ultimateFilter = ultimateFilter.sort(function (a, b) {
           return b[valor] - a[valor];
         });
 
@@ -355,15 +397,13 @@ export default {
           } else {
             return [
               ultimateFilter[indice].Nombre,
-              ultimateFilter[indice][valor]
+              ultimateFilter[indice][valor],
             ];
           }
         }
       } else {
         return ["0", 0];
       }
-
-      console.log(ultimateFilter);
     },
 
     unique(array, valor, name, criterio) {
@@ -443,22 +483,20 @@ export default {
       }
     },
 
-    user(){
-      var users = []
-      var noRepeat = [...new Set(this.balance.map(a => a.Nombre))];
+    user() {
+      var users = [];
+      var noRepeat = [...new Set(this.balance.map((a) => a.Nombre))];
       for (let i = 0; i < noRepeat.length; i++) {
-        users[i] = 
-        {
-          Nombre:noRepeat[i],
-          Telefono:0,
-          Direccion:"",
-          Actividad:"",
-          Oficio:"",
-          Cordenada:"",
-        }
+        users[i] = {
+          Nombre: noRepeat[i],
+          Telefono: 0,
+          Direccion: "",
+          Actividad: "",
+          Oficio: "",
+          Cordenada: "",
+        };
       }
       return users;
-    
     },
 
     totalChart(Año, Criterio) {
@@ -467,11 +505,11 @@ export default {
       var ultimate = [];
 
       var sum = 0;
-      this.axios.get("/").then(result => {
+      this.axios.get("/").then((result) => {
         data = result.data;
 
         for (let i = 0; i <= 2; i++) {
-          var filtro = data.filter(data => {
+          var filtro = data.filter((data) => {
             return data.Categoria == Criterio[i];
           });
 
@@ -481,11 +519,11 @@ export default {
                 var values = this.uniqueFecha(filtro, k);
                 temp[k] = {
                   name: [values[0]],
-                  data: { [Criterio[i]]: values[1] }
+                  data: { [Criterio[i]]: values[1] },
                 };
               } else {
               }
-              ultimate = temp.filter(data => {
+              ultimate = temp.filter((data) => {
                 return data != null;
               });
             }
@@ -503,11 +541,10 @@ export default {
           }
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss">
-
 </style>
