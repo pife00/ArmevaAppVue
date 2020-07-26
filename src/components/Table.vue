@@ -21,7 +21,7 @@
           <input v-model="Datos.Querry" name="querry" type="text" class="input is-dark" />
         </div>
         <div class="is-dark">
-          <button style="border-color:gray" id="busqueda" class="submit button is-primary">
+          <button style="border-color:gray" id="busqueda" class="submit button is-info">
             <i class="fas fa-search"></i>
           </button>
         </div>
@@ -161,7 +161,10 @@ export default {
       showModal:false
     };
   },
-
+  
+  created() {
+    
+  },
   watch: {
 
     optionCheck(value) {

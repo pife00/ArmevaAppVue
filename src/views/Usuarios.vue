@@ -1,7 +1,10 @@
 <template>
-  <div>
+<section class="section">
+  <div class="container">
     <usuariosTabla :usuarios="DataBaseUser"></usuariosTabla>
   </div>
+
+</section>
 </template>
 
 <script>

@@ -8,6 +8,11 @@
         <button @click="closeModal()" class="delete" aria-label="close"></button>
       </header>
       <section class="modal-card-body">
+        <div v-if="notificacion" class="notification is-info">
+          <button @click="notificacion = false" class="delete"></button>
+          Nombre deben ser llenado, cierre en: {{notificacionTemp}}
+        </div>
+
         <div class="column">
           <div class="field">
             <div class="control"></div>
@@ -68,7 +73,7 @@
         </div>
       </section>
       <footer class="modal-card-foot">
-        <button @click="SendData()" class="button is-success">{{Modo}}</button>
+        <button @click="SendData()" class="button is-info">{{Modo}}</button>
         <button @click="closeModal()" class="button">Cancelar</button>
       </footer>
     </div>
@@ -83,41 +88,62 @@ export default {
   },
   data() {
     return {
-      Datos: []
+      Datos: [],
+      notificacion:false,
+      notificacionTemp:9
     };
   },
   computed: {},
   watch: {},
 
   methods: {
+
+     closeNotificacion() {
+      var time = setInterval(() => {
+        this.notificacionTemp--;
+        if (this.notificacionTemp == 0) {
+          clearInterval(time);
+          this.notificacion = false;
+        }
+      }, 1000);
+
+      this.notificacionTemp = 9;
+    },
     closeModal() {
       store.state.ModalUsuario = false;
     },
 
     SendData() {
       if (this.Modo == "Nuevo Usuario") {
-        this.axios
-          .post("/newUser", {
-            Nombre: this.Datos.Nombre,
-            Telefono: this.Datos.Telefono,
-            Cordenada: this.Datos.Cordenada,
-            Direccion: this.Datos.Direccion,
-            Oficio: this.Datos.Oficio,
-            Sexo: this.Datos.Sexo
-          })
-          .then(result => {
-            console.log(result.data);
-            this.$store.commit("loadDataBase");
-            this.Datos.Nombre = "";
-            this.Datos.Telefono = "";
-            this.Datos.Cordenada = "";
-            this.Datos.Direccion = "";
-            this.Datos.Oficio = "";
-            this.Datos.Sexo = "";
-            this.closeModal();
-          })
-          .catch(err => {});
-      }
+        if (
+          this.Datos.Nombre == undefined
+        ) {
+          this.notificacion = true;
+          this.closeNotificacion();
+        }else{ 
+          this.axios
+            .post("/newUser", {
+              Nombre: this.Datos.Nombre,
+              Telefono: this.Datos.Telefono,
+              Cordenada: this.Datos.Cordenada,
+              Direccion: this.Datos.Direccion,
+              Oficio: this.Datos.Oficio,
+              Sexo: this.Datos.Sexo
+            })
+            .then(result => {
+              console.log(result.data);
+              this.$store.commit("loadDataBase");
+              this.Datos.Nombre = "";
+              this.Datos.Telefono = "";
+              this.Datos.Cordenada = "";
+              this.Datos.Direccion = "";
+              this.Datos.Oficio = "";
+              this.Datos.Sexo = "";
+              this.closeModal();
+            })
+            .catch(err => {});
+        }
+        }
     }
   }
 };

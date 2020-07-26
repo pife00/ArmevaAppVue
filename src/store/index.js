@@ -10,9 +10,9 @@ export default new Vuex.Store({
         DataBaseUserSelect: [],
         querry: [],
         Fecha: [new Date().getMonth() + 1, new Date().getFullYear()],
-        ModalAñadir:false,
-        ModalEditar:false,
-        ModalUsuario:false,
+        ModalAñadir: false,
+        ModalEditar: false,
+        ModalUsuario: false,
 
     },
     actions: {
@@ -24,27 +24,36 @@ export default new Vuex.Store({
         },
 
         changeFecha(state, value) {
-           /* state.Fecha = value;
-            var data = `{"Fecha":{"$gte":"${state.Fecha[1]}-${state.Fecha[0]}","$lte":"${state.Fecha[1]}-${state.Fecha[0]}-31"}}`;
-            axios.post("getDate", {
-                    data
-                })
-                .then((result) => {
-                    state.DataBase = result;
+            /* state.Fecha = value;
+             var data = `{"Fecha":{"$gte":"${state.Fecha[1]}-${state.Fecha[0]}","$lte":"${state.Fecha[1]}-${state.Fecha[0]}-31"}}`;
+             axios.post("getDate", {
+                     data
+                 })
+                 .then((result) => {
+                     state.DataBase = result;
 
-                }).catch(error => {
-                    console.log(error);
-                });*/
+                 }).catch(error => {
+                     console.log(error);
+                 });*/
         },
 
         loadDataBaseUser(state) {
+            var orden;
             axios.get("user")
                 .then((result) => {
                     state.DataBaseUser = result.data;
+                    orden = state.DataBaseUser.sort(function(a,b){
+                        if(a.Nombre < b.Nombre){return -1}
+                        if(a.Nombre > b.Nombre){return 1}
+                        return 0;   
+                    });
+                    state.DataBaseUser = orden;  
                 });
+                
+            
         },
 
-        modalUp(){
+        modalUp() {
             state.ModalU = true;
         },
 
@@ -52,7 +61,7 @@ export default new Vuex.Store({
         loadDataBase(state) {
 
             if (state.Fecha[0] == 0) {
-                
+
                 axios.get("/")
                     .then((result) => {
                         state.DataBase = result.data;
@@ -60,7 +69,7 @@ export default new Vuex.Store({
 
             } else {
                 var data = `{"Fecha":{"$gte":"${state.Fecha[1]}-${state.Fecha[0]}","$lte":"${state.Fecha[1]}-${state.Fecha[0]}-31"}}`;
-                
+
                 axios.post("getDate", {
                         data
                     })

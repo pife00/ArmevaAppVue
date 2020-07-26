@@ -245,7 +245,7 @@ export default {
       TotalEgresos: [],
       TotalDeudas: [],
       TotalUltimate: [],
-      data:[{Nombre:"FElipe"}]
+      
     };
   },
 
@@ -308,7 +308,7 @@ export default {
         }
 
         var fecha = new Date();
-        console.log(filtro);
+        
 
        return [
           filtro,

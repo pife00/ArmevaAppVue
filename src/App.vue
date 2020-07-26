@@ -1,34 +1,33 @@
 <template>
   <div id="app">
-    <nav class="breadcrumb is-centered balance" aria-label="breadcrumb">
-      <ul>
-        <li>
+    <div class="navbar is-info" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="" >
+            <img src="@/assets/logo3.png" width="90" height="28" alt />
+        </a>
 
-          <router-link  to="/">
-            <span class="icon is-small">
-            <i class="fas fa-clipboard-list"></i>
-            </span>
-            Resumen
-          </router-link>
-          
-          <router-link to="/Tablas">
-            <span class="icon is-small">
-            <i class="fas fa-table"></i>
-            </span>
-            Tablas
-          </router-link>
+        <a role="button" class="navbar-burger burger"
+       arial-label="menu"
+       aria-expanded="false" data-target="Menu"
+       :class="{'is-active':show}"
+       @click="showMenu()"
+        >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        </a>
+      </div>
+      
+      <div :class="{'is-active':menu}" id="Menu" class="navbar-menu">
+        <div class="navbar-start">
+          <router-link class="navbar-item" to="/">Resumen</router-link>
 
+          <router-link class="navbar-item" to="/Tablas">Tablas</router-link>
 
-           <router-link to="/usuarios">
-            <span class="icon is-small">
-            <i class="fas fa-users"></i>
-            </span>
-            Usuarios
-          </router-link>
-          
-        </li>
-      </ul>
-    </nav>
+          <router-link class="navbar-item" to="/usuarios">Usuarios</router-link>
+        </div>
+      </div>
+    </div>
     <router-view />
   </div>
 </template>
@@ -37,7 +36,22 @@
 import { mapState } from "vuex";
 export default {
   data() {
-    return {};
+    return {
+      show:false,
+      menu:false
+    };
+  },
+  methods: {
+    showMenu(){
+      if(this.show == false && this.menu == false){
+        
+        this.show = true
+        this.menu = true
+      }else{
+        this.show = false
+        this.menu = false
+      }
+    }
   },
 };
 </script>
@@ -48,7 +62,7 @@ export default {
 @import "@/sass/_media.scss";
 @import "@/sass/_variables.scss";
 @import "@/sass/_resumen.scss";
-@import "@/sass/_modal.scss";
+@import "@/sass/_userList.scss";
 
 
 </style>

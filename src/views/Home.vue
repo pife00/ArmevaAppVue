@@ -1,8 +1,9 @@
 <template>
- 
-      <div class="column">  
+<section class="section">
+      <div class="container">  
         <Resumen :user="DataBaseUser" :balance="DataBase"></Resumen>
       </div>
+</section>
     
 </template>
 
