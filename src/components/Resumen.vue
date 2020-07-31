@@ -1,9 +1,10 @@
 <template>
   <div>
-    <div class="columns is-mobile">
+    <div class="columns">
       <div class="column">
         <h1 class="title 3">Resumen</h1>
       </div>
+
       <div class="column">
         <p class="subtitle">Fecha</p>
         <div class="select is-dark">
@@ -32,6 +33,10 @@
           </select>
         </div>
       </div>
+    </div>
+
+    <div>
+      <div class="divider is-info">Datos</div>
     </div>
 
     <div class="columns">
@@ -76,7 +81,8 @@
         ></pie-chart>
       </div>
     </div>
-    <div class="columns">
+    
+    <div v-if="balance.length > 0" class="columns">
       <div class="column box">
         <h1 class="title">Ingresos</h1>
         <div class="has-text-right">
@@ -107,7 +113,7 @@
     </div>
     <br />
 
-    <div class="columns">
+    <div v-if="balance.length > 0" class="columns">
       <div class="column box">
         <h1 class="title">Egresos</h1>
         <div class="has-text-right">
@@ -135,7 +141,7 @@
       </div>
     </div>
 
-    <div class="columns">
+    <div v-if="balance.length > 0" class="columns">
       <div class="column box">
         <h1 class="title">Lo que mas Deben</h1>
         <div class="has-text-right"></div>
@@ -156,14 +162,14 @@
       <div class="column">
         <h1 class="title">Deudores</h1>
         <div class="has-text-right">
-        <export-excel
+          <export-excel
             class="button"
             :data="descargasDeuda('Deuda')[0]"
             worksheet="Datos"
-            :name="descargasDeuda('Deuda')[1]"            
-          ><i class="fas fa-file-download"></i>
+            :name="descargasDeuda('Deuda')[1]"
+          >
+            <i class="fas fa-file-download"></i>
           </export-excel>
-
         </div>
         <column-chart
           :colors="['#C0D1CE']"
@@ -245,7 +251,6 @@ export default {
       TotalEgresos: [],
       TotalDeudas: [],
       TotalUltimate: [],
-      
     };
   },
 
@@ -301,16 +306,14 @@ export default {
         for (let i = 0; i < filtro.length; i++) {
           for (let j = 0; j < this.user.length; j++) {
             if (filtro[i].Nombre == this.user[j].Nombre) {
-               filtro[i].Telefono = this.user[j].Telefono;
+              filtro[i].Telefono = this.user[j].Telefono;
             }
-           
           }
         }
 
         var fecha = new Date();
-        
 
-       return [
+        return [
           filtro,
           categoria + " " + new Intl.DateTimeFormat().format(fecha),
         ];
@@ -483,22 +486,7 @@ export default {
       }
     },
 
-    user() {
-      var users = [];
-      var noRepeat = [...new Set(this.balance.map((a) => a.Nombre))];
-      for (let i = 0; i < noRepeat.length; i++) {
-        users[i] = {
-          Nombre: noRepeat[i],
-          Telefono: 0,
-          Direccion: "",
-          Actividad: "",
-          Oficio: "",
-          Cordenada: "",
-        };
-      }
-      return users;
-    },
-
+    
     totalChart(Año, Criterio) {
       var data = [];
       var temp = [];

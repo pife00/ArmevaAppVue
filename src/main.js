@@ -15,6 +15,7 @@ import VueGoogleCharts from 'vue-google-charts';
 import JsonExcel from 'vue-json-excel';
 
 Vue.use(excel);
+
 Vue.component('downloadExcel', JsonExcel);
 Vue.use(VueGoogleCharts);
 Vue.use(Chartkick);

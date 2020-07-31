@@ -12,7 +12,7 @@
             <div class="control">
               <input v-model="Datos" class="input" type="text" placeholder="Encontrar usuario" />
             <ul v-if="showUserPartial" class="my-list"><li
-          @click="userSelected(item.Nombre)"
+          @click="userSelected(item)"
           v-for="item in UserPartial" :key="item._id">
           {{item.Nombre}}</li></ul>
           <p v-if="UserExist == false" style="color:red">
@@ -28,9 +28,6 @@
             </span>
             Usuario encontrado
           </p>
-            </div>
-            <div class="control">
-              <a :disabled="button == false" @click="Encontrar()" class="button is-info">Buscar</a>
             </div>
           </div>
         </div>
@@ -68,7 +65,7 @@
 
     <collapse-transition :duration="500" v-show="showTable" >
       <div class="box" >
-        <table v-if="usuarios.length > 0" id="usuariosTabla" class="table is-bordered is-striped is-fullwidth">
+        <table v-if="Lista.length > 0" id="usuariosTabla" class="table is-bordered is-striped is-fullwidth">
           <thead style="$orange">
             <tr>
               <th>Nombre</th>
@@ -78,7 +75,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr  v-for="item in usuarios" :key="item._id">
+            <tr  v-for="item in Lista" :key="item._id">
               <td>
                 <a
                   v-on:click="usuarioActivo
@@ -177,40 +174,34 @@ export default {
       showUser: false,
       showTable: false,
       showTabs: false,
-      user: [],
+      ListUser: this.usuarios,
       Orden: [],
       button: false,
     };
   },
 
-  watch: {
-    'usuarios':{
-      handler(){
+  computed: {
+    Lista:{
+      get:function(){
+        return this.ListUser;
+      },
+      set:function(){
         
       }
-    },
+    }
+  },
 
-     UserExist() {
-      if (this.UserExist == true) {
-        this.button = true;
-      }
-      if (this.UserExist == false) {
-        this.button = false;
-      }
-    },
-
+  watch: {
+    
     Datos(){
+      
        if(this.userSelect == ""){
-         
           this.Buscar();
-          if(this.Orden.length > 0){
-             this.usuarios = this.Orden;
-             this.Orden = [];
-           }    
-        }else{
-           
-           this.userSelect = "";  
-             
+            
+        }if(this.Datos == ""){
+          this.ListUser = this.usuarios;
+          this.UserExist = null;
+          this.userSelect = "";
         }
        
     }
@@ -224,14 +215,13 @@ export default {
       store.state.ModalUsuario = true;
     },
 
-    
-
      userSelected(data){
       this.showUserPartial=false
       this.UserExist = true
-      this.Datos = data;
-      this.userSelect = data;
-      this.userEncontrar = data;
+      this.Datos = data.Nombre;
+      this.userSelect = data.Nombre;
+      this.ListUser = [data];
+      this.showTable = true;
     },
 
     Buscar() {
@@ -247,9 +237,14 @@ export default {
             .post("/userPartial",{Nombre:this.Datos})
             .then((result)=>{
               this.UserPartial = result.data;
+             
             });
-           this.showUserPartial =true;
-              
+           this.showUserPartial = true;
+           if(this.UserPartial.length >0){
+             this.ListUser = this.UserPartial;
+             this.showTable = true;
+           }
+           
         this.axios
           .post("/userExist", { Nombre: this.Datos })
           .then((result) => {
@@ -260,18 +255,7 @@ export default {
       
     },
 
-    Encontrar(){
-      this.showTable = false
-      this.userSelect = this.Datos;
-      this.userEncontrar = this.Datos;
-      var filtro = this.usuarios.filter(a=>{
-        return a.Nombre == this.userEncontrar;
-      })
-      this.userEncontrar = "";
-      this.Orden = this.usuarios;
-      this.usuarios = filtro;
-      this.showTable = true
-    },
+ 
     
     
 

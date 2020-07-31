@@ -58,11 +58,13 @@ export default {
 
 <style lang="scss">
 @import "bulma";
+@import "../node_modules/@creativebulma/bulma-divider/dist/bulma-divider.css";
 @import "../node_modules/bulma/sass/utilities/initial-variables.sass";
 @import "@/sass/_media.scss";
 @import "@/sass/_variables.scss";
 @import "@/sass/_resumen.scss";
 @import "@/sass/_userList.scss";
+@import "@/sass/_sidebar.scss";
 
 
 </style>

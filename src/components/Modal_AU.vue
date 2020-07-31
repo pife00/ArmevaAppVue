@@ -3,7 +3,7 @@
     <div @click="closeModal()" class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">{{Modo}}</p>
+        <p class="modal-card-title">{{ModoReactivo}}</p>
         <button @click="closeModal()" class="delete" aria-label="close"></button>
       </header>
       <section class="modal-card-body">
@@ -19,6 +19,7 @@
                 <option value="Ingresos">Ingresos</option>
                 <option value="Egresos">Egresos</option>
                 <option value="Deuda">Deuda</option>
+                <option value="Abono">Abono</option>
               </select>
             </div>
           </div>
@@ -27,17 +28,15 @@
         <div class="field">
           <label class="label">Nombre</label>
           <div class="control" v-bind:class="{ 'is-loading': loading}">
-            <input
-              v-model="Datos.Nombre"
-              class="input"
-              type="text"
-              placeholder="Nombre"
-            />
+            <input v-model="Datos.Nombre" class="input" type="text" placeholder="Nombre" />
           </div>
-          <ul v-if="showUserPartial" class="my-list"><li
-          @click="userSelected(item.Nombre)"
-          v-for="item in UserPartial" :key="item._id">
-          {{item.Nombre}}</li></ul>
+          <ul v-if="showUserPartial" class="my-list">
+            <li
+              @click="userSelected(item)"
+              v-for="item in UserPartial"
+              :key="item._id"
+            >{{item.Nombre}}</li>
+          </ul>
           <p v-if="UserExist == true" style="color:green">
             <span class="icon has-text-success">
               <i class="fas fa-check-square"></i>
@@ -53,7 +52,6 @@
             <a @click="showModalUsuariosAñadir()">aqui</a> para añadirlo
           </p>
 
-
           <p v-if="UserExist == null" style="color:#3298dc">
             <span class="icon has-text-info">
               <i class="fas fa-user-clock"></i>
@@ -62,9 +60,7 @@
           </p>
         </div>
 
-        
-
-        <div class="field">
+        <div v-if="ModoReactivo != 'Abono'" class="field">
           <div class="columns">
             <div class="column">
               <label class="label">Producto</label>
@@ -100,90 +96,135 @@
         </div>
       </section>
       <footer class="modal-card-foot">
-        <button :disabled="button == false" @click="SendData()" class="button is-info">{{Modo}}</button>
+        <button id="Abono" :disabled="button == false" @click="SendData()" class="button is-info">{{ModoReactivo}}</button>
         <button @click="closeModal()" class="button">Cancelar</button>
       </footer>
     </div>
 
     <Modal_Usuarios v-if="$store.state.ModalUsuario" :Modo="Nuevo_Usuario"></Modal_Usuarios>
+    
+
+    <slide-x-right-transition >
+     <SideBarAbono  v-if="$store.state.ModalAbono" :usuario="userDeuda" :abono ="userAbono"></SideBarAbono>
+  </slide-x-right-transition>
+   
+   
   </div>
 </template>
 <script>
 import store from "../store/index";
 import Modal_Usuarios from "../components/Modal_Usuarios";
+import {SlideXRightTransition} from "vue2-transitions";
+import { CollapseTransition } from "vue2-transitions";
+import { FadeTransition } from "vue2-transitions";
+import SideBarAbono from "../components/SideBarAbono";
 export default {
   components: {
     Modal_Usuarios,
+    SideBarAbono,
+    SlideXRightTransition,
+     CollapseTransition,
+     FadeTransition
   },
   props: {
     Modo: String,
-    user: Object,
+    user: {},
   },
   data() {
     return {
-      Datos :[],
+      SideBar: false,
+      ModoAbono:false,
+      Datos: [],
       notificacion: false,
       notificacionTemp: 9,
-      realPrecio:0,
+      ModoReactivo:this.Modo,
+
       loading: false,
       UserExist: null,
       button: false,
-      UserPartial:[],
-      showUserPartial:false,
-      userSelect:"",
-      Nuevo_Usuario: "Nuevo Usuario",
+      
+      UserPartial: [],
+      showUserPartial: false,
+      userSelect: "",
+      userDeuda: "",
+      userAbono:0,
+      
     };
   },
 
   created() {
-    this.Datos.Categoria = "Ingresos"
-    if (this.Modo == "Actualizar") {
+    
+    if (this.ModoReactivo == "Actualizar") {
+      this.Datos = this.user;
       this.button = true;
     }
   },
 
   computed: {
-    count() {
-      this.Datos = this.user;
+    Actualizar: {
+      get:function(){
+        return this.user;
+      }
     },
-  
+
+    ModalModo:{
+      get:function(){
+        return this.Modo
+      }
+    }
   },
   watch: {
     count() {},
 
-    'Datos.Categoria':{
+    "Datos.Categoria":{
       handler(){
-        console.log(this.Datos)
-      }
-    },
-
-    'Datos.Nombre':{
-      handler(){
-        if(this.userSelect == ""){
-          this.Buscar();
-        }else{
-           this.userSelect = "";
-           
+        if(this.Datos.Categoria == "Abono"){
+          this.ModoReactivo = "Abono";
+          this.button =  false;
+        }
+        else{
+         this.ModoReactivo = this.ModalModo;
         }
       }
     },
 
-    'Datos.Precio':{
-      handler(){}
+    "Datos.Nombre": {
+      handler() {
+        if (this.userSelect == "") {
+          this.Buscar();
+        } else {
+          this.userSelect = "";
+        }
+      },
     },
 
+    "Datos.Precio": {
+      handler() {
+        if(this.ModoReactivo == "Abono" && this.Datos.Precio != ""){
+          this.userAbono = this.Datos.Precio
+        }
+        
+      },
+    },
+
+   
     UserExist() {
       if (this.UserExist == true) {
         this.button = true;
+        
       }
       if (this.UserExist == false) {
         this.button = false;
+      }
+      if(this.ModoAbono == true){
+        this.button = true;
+         document.getElementById("Abono").textContent ="Abono";
+        
       }
     },
   },
 
   methods: {
-
     closeNotificacion() {
       var time = setInterval(() => {
         this.notificacionTemp--;
@@ -196,49 +237,49 @@ export default {
       this.notificacionTemp = 9;
     },
 
-    userSelected(data){
-      this.showUserPartial=false
-      this.UserExist = true
-      this.Datos.Nombre = data;
-      this.userSelect = data;
-      
-      
+    userSelected(data) {
+      this.showUserPartial = false;
+      this.UserExist = true;
+      this.Datos.Nombre = data.Nombre;
+      this.userSelect = data.Nombre;
+      this.userDeuda = data.Nombre;
+      this.userAbono = this.Datos.Precio;
     },
 
     Buscar() {
-      if (this.Datos.Nombre == undefined 
-      ||this.Datos.Nombre == ""
-      ) {
-      } else  {
+      if (this.Datos.Nombre == undefined || this.Datos.Nombre == "") {
+      } else {
         this.loading = true;
+
+        this.axios
+          .post("/userPartial", { Nombre: this.Datos.Nombre })
+          .then((result) => {
+            this.UserPartial = result.data;
+          });
+        this.showUserPartial = true;
         
-            this.axios
-            .post("/userPartial",{Nombre:this.Datos.Nombre})
-            .then((result)=>{
-              this.UserPartial = result.data;
-            });
-           this.showUserPartial =true;
-              
+
         this.axios
           .post("/userExist", { Nombre: this.Datos.Nombre })
           .then((result) => {
             this.UserExist = result.data;
             this.loading = false;
+            
           });
       }
+
       
     },
-
 
     showModalUsuariosAñadir() {
       store.state.ModalUsuario = true;
     },
 
     closeModal() {
-      if (this.Modo == "Añadir") {
+      if (this.ModoReactivo == "Añadir") {
         store.state.ModalAñadir = false;
       }
-      if (this.Modo == "Actualizar") {
+      if (this.ModoReactivo == "Actualizar") {
         store.state.ModalEditar = false;
       }
     },
@@ -254,7 +295,11 @@ export default {
     },
 
     SendData() {
-      if (this.Modo == "Añadir") {
+      if(this.ModoReactivo == "Abono"){
+        this.$store.state.ModalAbono = true
+      }
+
+      if (this.ModoReactivo == "Añadir") {
         if (
           this.Datos.Categoria == undefined ||
           this.Datos.Nombre == undefined
@@ -272,7 +317,6 @@ export default {
               Telefono: "No datos",
             })
             .then((result) => {
-              
               this.$store.commit("loadDataBase");
               this.Datos.Nombre = "";
               this.Datos.Productos = "";
@@ -284,7 +328,7 @@ export default {
             .catch((err) => {});
         }
       }
-      if (this.Modo == "Actualizar") {
+      if (this.ModoReactivo == "Actualizar") {
         this.axios
           .post("/getUpdate", {
             _id: this.Datos._id,

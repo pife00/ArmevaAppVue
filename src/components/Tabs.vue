@@ -81,6 +81,8 @@
                 <tr>
                     <th>Producto</th>
                     <th>Deuda</th>
+                    <th>Abono</th>
+                    <th>Saldo</th>
                     <th>#</th>
                     <th>Fecha</th>
                 </tr>
@@ -89,6 +91,8 @@
                 <tr v-for="item in tabDeuda" :key="item._id" >
                     <td>{{item.Productos}}</td>
                     <td>{{formatNumber(item.Precio)}}</td>
+                    <td>{{formatNumber(item.Abono)}}</td>
+                    <td>{{formatNumber(item.Precio - item.Abono)}}</td>
                     <td>{{item.Cantidad}}</td>
                     <td>{{formatDate(item.Fecha)}}</td>
                 </tr>
@@ -113,7 +117,7 @@ export default {
   name: "Tabs",
 
   props: {
-    usuario: Array
+    usuario: Object
   },
 
   data() {
@@ -135,12 +139,20 @@ export default {
   methods: {
       tabSeleccionada(select){
           this.tabActive = select
-          switch(select){
-            
+          switch(select){        
           }
       },
 
-      universalTabs(){ 
+      Abono(){
+         var filtroD = this.usuario.Actividad.filter(a=>{
+            return a.Categoria == "Deuda"
+          }) 
+
+      },
+
+      universalTabs(){
+        var sum = 0;
+        var AbonoFiltro = [];
           var filtroI = this.usuario.Actividad.filter(a=>{
             return a.Categoria == "Ingresos"
           })
@@ -155,6 +167,17 @@ export default {
           var filtroD = this.usuario.Actividad.filter(a=>{
             return a.Categoria == "Deuda"
           })
+
+         for (let i = 0; i < filtroD.length; i++) {  
+            for (let j = 0; j < filtroD[i].Abono.length; j++) {
+              sum +=  filtroD[i].Abono[j]
+            }
+            filtroD[i].Abono = [];
+            filtroD[i].Abono = sum;
+            sum = 0;
+          }
+          
+          
           this.tabDeuda = filtroD;
       },
 

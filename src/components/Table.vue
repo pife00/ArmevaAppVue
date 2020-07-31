@@ -66,9 +66,7 @@
             <div class="columns ">
               <div class="column is-3">
                  <a
-              v-on:click="showModalUniversal(
-                item._id,item.Nombre,item.Productos,
-                item.Precio,item.Cantidad,item.Categoria,item.Fecha)"
+              @click="showModalUniversal(item)"
               id="editButton"
               class="button is-white"
             >
@@ -144,21 +142,14 @@ export default {
         Querry: "",
       },
 
-      DatosEdit: {
-        _id: "",
-        Nombre: "",
-        Productos: "",
-        Precio: 0,
-        Cantidad:0,
-        Categoria: ""
-      },
+      DatosEdit: [],
       ModalNombre:"",
       ModalPrecio:0,
       ModalId:"",
       optionCheck: [],
       usuariosReserva: [],
       Modo: "Actualizar",
-      showModal:false
+      
     };
   },
   
@@ -274,16 +265,9 @@ export default {
       }).catch(error)
     },
 
-    showModalUniversal(id, Nombre, Productos, Precio,Cantidad, Categoria,Fecha){
-      this.DatosEdit._id = id;
-      this.DatosEdit.Nombre = Nombre;
-      this.DatosEdit.Productos = Productos;
-      this.DatosEdit.Precio = Precio;
-      this.DatosEdit.Cantidad = Cantidad;
-      this.DatosEdit.Categoria = Categoria;
-      this.DatosEdit.Fecha = Fecha;
-      store.state.ModalEditar = true;
-     
+    showModalUniversal(item){
+     this.DatosEdit = item;
+     this.$store.state.ModalEditar = true;
     }
   }
 };

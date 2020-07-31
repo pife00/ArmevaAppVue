@@ -1,0 +1,33 @@
+
+.menu{
+    height: auto;
+    background-color: $light;
+    position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+    z-index: 1; /* Stay on top */
+    top: 0; /* Stay at the top */
+    right: 0;
+
+    table{
+         
+        thead{
+            
+            th{
+                background-color: $light;
+            }
+        }
+        tbody{
+            td{
+                background-color: $light;   
+                cursor: pointer;
+            }
+        }
+        tfoot{
+            th{
+                background-color: $light;
+            }
+        }
+    }
+    tr:hover td {
+        background-color: $grey-light;
+    } 
+}

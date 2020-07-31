@@ -13,6 +13,7 @@ export default new Vuex.Store({
         ModalAñadir: false,
         ModalEditar: false,
         ModalUsuario: false,
+        ModalAbono: false,
 
     },
     actions: {
