@@ -2,7 +2,7 @@
   <div id="app">
     <div class="navbar is-info" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a class="" >
+        <a :href="'/'" >
             <img src="@/assets/logo3.png" width="90" height="28" alt />
         </a>
 
@@ -21,8 +21,6 @@
       <div :class="{'is-active':menu}" id="Menu" class="navbar-menu">
         <div class="navbar-start">
           <router-link class="navbar-item" to="/">Resumen</router-link>
-
-          <router-link class="navbar-item" to="/Tablas">Tablas</router-link>
 
           <router-link class="navbar-item" to="/usuarios">Usuarios</router-link>
         </div>
@@ -65,6 +63,8 @@ export default {
 @import "@/sass/_resumen.scss";
 @import "@/sass/_userList.scss";
 @import "@/sass/_sidebar.scss";
+@import "@/sass/_select.scss";
+@import "@/sass/_table.scss";
 
 
 </style>

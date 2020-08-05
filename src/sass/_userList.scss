@@ -1,11 +1,22 @@
+
+
 .my-list{
     border-bottom: 1px solid $border;
-    border-left: 1px solid $border;
-    border-right: 1px solid $border;
+    
+    margin: 10px;
+    display: inline;
     a{
         color: green;   
     }
     li{
+        cursor: pointer;
+        list-style-position: outside;
+        list-style:none;
+        
+        
+        &::before{
+           
+        }
         &:hover{
             background-color: $border;
         }
@@ -15,5 +26,6 @@
 a{
     color:$info;
 }
+
 
 

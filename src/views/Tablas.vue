@@ -4,9 +4,9 @@
       <div  class="column has-text-centered">
       <button v-on:click="Modal()" style="border-color:gray" class="button is-info">Añadir</button>
       </div>
-      <Table :usuarios="DataBase"></Table>
+      <Table v-if="Test" :usuarios="DataBase"></Table>
+      <Tabla :datos = "DataBase" :configuracion="configuracion" :modo="modo" ></Tabla>
       <fade-transition>
-        <Modal_AU v-if="$store.state.ModalAñadir" :Modo="Modo" :user="Ingresos"></Modal_AU>
       </fade-transition>
     </div>
   </section>
@@ -19,14 +19,13 @@ import { mapState } from "vuex";
 import { FadeTransition } from "vue2-transitions";
 import store from "../store/index";
 import Table from "../components/Table";
+import Tabla from '../components/Tabla.vue';
 
-import Modal_AU from "../components/Modal_AU";
 export default {
   name: "Tablas",
   components: {
     Table,
-    
-    Modal_AU,
+    Tabla,
     FadeTransition,
   },
 
@@ -34,6 +33,26 @@ export default {
     return {
       Ingresos: [],
       Modo: "Añadir",
+      modo:"Registro",
+      Test:false,
+      configuracion:[
+        {
+          clave:"Nombre",
+          titulo:"Nombre"
+        },{
+          clave:"Productos",
+          titulo:"Productos"
+        },{
+          clave:"Precio",
+          titulo:"Precio"
+        },{
+          clave:"Cantidad",
+          titulo:"#"
+        },{
+          clave:"Fecha",
+          titulo:"Fecha"
+        }
+      ]
     };
   },
   created() {

@@ -7,13 +7,25 @@ export default new Vuex.Store({
     state: {
         DataBase: [],
         DataBaseUser: [],
-        DataBaseUserSelect: [],
-        querry: [],
+        UsuarioNuevo:false,
+        UsuarioElegido:[],
+        RegistroElegido:[],
+        RegistroNuevo:false,
+        ModoTabla:"usuarios",
+        ModalEliminar:false,
+
         Fecha: [new Date().getMonth() + 1, new Date().getFullYear()],
+       // Fecha: [7, new Date().getFullYear()],
         ModalAñadir: false,
         ModalEditar: false,
         ModalUsuario: false,
+        
         ModalAbono: false,
+        
+        UsuarioPerfil:false,
+        Registro_Actividad:false,
+        OrdenRegistro:"Total",
+        BusquedaUsuarioParcial:"",
 
     },
     actions: {
@@ -44,8 +56,8 @@ export default new Vuex.Store({
                 .then((result) => {
                     state.DataBaseUser = result.data;
                     orden = state.DataBaseUser.sort(function(a,b){
-                        if(a.Nombre < b.Nombre){return -1}
-                        if(a.Nombre > b.Nombre){return 1}
+                        if(a.Nombre < b.Nombre){return -1;}
+                        if(a.Nombre > b.Nombre){return 1;}
                         return 0;   
                     });
                     state.DataBaseUser = orden;  
@@ -62,14 +74,16 @@ export default new Vuex.Store({
         loadDataBase(state) {
 
             if (state.Fecha[0] == 0) {
-
+               
                 axios.get("/")
                     .then((result) => {
                         state.DataBase = result.data;
                     });
 
             } else {
-                var data = `{"Fecha":{"$gte":"${state.Fecha[1]}-${state.Fecha[0]}","$lte":"${state.Fecha[1]}-${state.Fecha[0]}-31"}}`;
+                state.Fecha[0]=parseInt(state.Fecha[0]);
+                
+                var data = `{"Fecha":{"$gte":"${state.Fecha[1]}-${state.Fecha[0]}","$lte":"${state.Fecha[1]}-${state.Fecha[0]+1}-1"}}`;
 
                 axios.post("getDate", {
                         data

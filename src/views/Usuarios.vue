@@ -1,26 +1,118 @@
 <template>
-<section class="section">
-  <div class="container">
-    <usuariosTabla :usuarios="DataBaseUser"></usuariosTabla>
-  </div>
+<div>
+  <section class="section">
+    <div class="container">
+    
+    <div class="column">
+      <Panel_de_Control 
+    :usuarios ="DataBaseUser"
+    :registro ="DataBase"
+    ></Panel_de_Control>
+    </div>
 
-</section>
+    <div class="column">
+    <Tabla v-if="$store.state.ModoTabla == 'usuarios'"
+    :datos="DataBaseUser" 
+    :configuracion="configuracion_usuarios" 
+    modo="Usuarios"></Tabla>
+
+    <Tabla v-if="$store.state.ModoTabla == 'registros'"
+    :datos="DataBase" 
+    :configuracion="configuracion_registros" 
+    modo="Registro"></Tabla>
+    </div>
+
+    <Usuario_Perfil v-if="$store.state.UsuarioPerfil == 'nuevo_usuario'" 
+    modo="Nuevo Usuario" 
+    :usuario="$store.state.UsuarioElegido">
+    </Usuario_Perfil>
+
+    <Usuario_Perfil v-if="$store.state.UsuarioPerfil == 'editar_usuario'" 
+     modo="Editar Usuario" 
+    :usuario="$store.state.UsuarioElegido">
+    </Usuario_Perfil>
+
+    <Registro_Actividad v-if="$store.state.Registro_Actividad"></Registro_Actividad>
+
+    </div>
+
+  </section>
+  
+    
+
+ 
+</div>
+
 </template>
 
 <script>
 import { mapState } from "vuex";
 import store from "../store/index";
+import Tabla from '../components/Tabla'
+import Panel_de_Control from "../components/Panel_de_Control";
+import Usuario_Perfil from '../components/Usuario_Perfil';
 import usuariosTabla from "../components/usuariosTabla";
+import Registro_Actividad from '../components/Registro_Actividad';
 
 export default {
   components: {
-    usuariosTabla
+    usuariosTabla,
+    Panel_de_Control,
+    Usuario_Perfil,
+    Tabla,
+    Registro_Actividad,
   },
+  data() {
+    return {
+       configuracion_usuarios: [
+        {
+          clave: "Nombre",
+          titulo: "Nombre",
+        },
+        {
+          clave: "Telefono",
+          titulo: "Telefono",
+        },
+        {
+          clave: "Direccion",
+          titulo: "Direccion",
+        },
+        {
+          clave: "Oficio",
+          titulo: "Oficio",
+        },
+      ],
+      configuracion_registros:[
+        {
+          clave:"Nombre",
+          titulo:"Nombre"
+        },{
+          clave:"Productos",
+          titulo:"Productos"
+        },{
+          clave:"Precio",
+          titulo:"Precio"
+        },{
+          clave:"Cantidad",
+          titulo:"#"
+        },{
+          clave:"Categoria",
+          titulo:"Categoria",
+        },{
+          clave:"Fecha",
+          titulo:"Fecha"
+        }
+      ]
+    }
+  },
+  
+
   created() {
-    store.commit("loadDataBaseUser");
+      store.commit("loadDataBase");
+      store.commit("loadDataBaseUser");
   },
   computed: {
-    ...mapState(["DataBaseUser"])
+    ...mapState(["DataBase","DataBaseUser"])  
   }
 };
 </script>

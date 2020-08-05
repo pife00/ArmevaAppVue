@@ -156,7 +156,7 @@ export default {
     Tabs,
   },
    props: {
-    usuarios: Array,
+    usuarios: [],
   },
   data() {
     return {

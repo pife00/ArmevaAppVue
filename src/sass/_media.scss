@@ -7,25 +7,29 @@
       height: 2px;
     }
   }
-    table#RegistroTablas th:nth-child(4),
+    table#Registro th:nth-child(4),
     th:nth-child(5),th:nth-child(6){
       display: none;
     }
-    table#RegistroTablas 
+    table#Registro 
     td:nth-child(4),td:nth-child(5),td:nth-child(6){
       display: none;
     }
-
-    table#usuariosTabla th:nth-child(4){
+    table#Registro
+    th:nth-child(7){
       display: none;
     }
-    table#usuariosTabla 
+
+    table#Usuarios th:nth-child(4){
+      display: none;
+    }
+    table#Usuarios 
     td:nth-child(4){
       display: none;
     }
 
     .Año{
-      padding-top: 5px;;
+      padding-left: 5px;;
     }
   }
 
@@ -39,9 +43,6 @@
       font-size: 17px;
     }
 
-   
-   
-    
   }
 
 

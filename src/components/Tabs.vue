@@ -18,107 +18,34 @@
     </div>
 
     <div v-show="tabActive == 1">
-        <table class="table is-fullwidth is-striped">
-            <thead>
-                <tr>
-                    <th>Producto</th>
-                    <th>Ingreso</th>
-                    <th>#</th>
-                    <th>Fecha</th>
-                    
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="item in tabIngresos" :key="item._id" >
-                    <td>{{item.Productos}}</td>
-                    <td>{{formatNumber(item.Precio)}}</td>
-                     <td>{{item.Cantidad}}</td>
-                    <td>{{formatDate(item.Fecha)}}</td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th>Total</th>
-                    <th>{{formatNumber(Total(tabIngresos))}}</th>
-                    <th></th>
-                </tr>
-            </tfoot>
-        </table>
+      <Tabla :datos = "tabIngresos" modo="Registro" :configuracion="configuracion_ingresos_egresos"></Tabla> 
     </div>
 
     <div v-show="tabActive == 2">
-       <table class="table is-fullwidth is-striped">
-            <thead>
-                <tr>
-                    <th>Producto</th>
-                    <th>Egreso</th>
-                    <th>#</th>
-                    <th>Fecha</th>
-                    
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="item in tabEgresos" :key="item._id" >
-                    <td>{{item.Productos}}</td>
-                    <td>{{formatNumber(item.Precio)}}</td>
-                    <td>{{item.Cantidad}}</td>
-                    <td>{{formatDate(item.Fecha)}}</td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th>Total</th>
-                    <th>{{formatNumber(Total(tabEgresos))}}</th>
-                    <th></th>
-                </tr>
-            </tfoot>
-        </table>
+       <Tabla :datos = "tabEgresos" modo="Registro" :configuracion="configuracion_ingresos_egresos"></Tabla> 
     </div>
 
     <div v-show="tabActive == 3">
-       <table class="table is-fullwidth is-striped">
-            <thead>
-                <tr>
-                    <th>Producto</th>
-                    <th>Deuda</th>
-                    <th>Abono</th>
-                    <th>Saldo</th>
-                    <th>#</th>
-                    <th>Fecha</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="item in tabDeuda" :key="item._id" >
-                    <td>{{item.Productos}}</td>
-                    <td>{{formatNumber(item.Precio)}}</td>
-                    <td>{{formatNumber(item.Abono)}}</td>
-                    <td>{{formatNumber(item.Precio - item.Abono)}}</td>
-                    <td>{{item.Cantidad}}</td>
-                    <td>{{formatDate(item.Fecha)}}</td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th>Total</th>
-                    <th>{{formatNumber(Total(tabDeuda))}}</th>
-                    <th></th>
-                </tr>
-            </tfoot>
-        </table>
+       <Tabla :datos = "tabDeuda" modo="Registro" :configuracion="configuracion_deuda"></Tabla> 
     </div>
-    
-
   </div>
 </template>
 <script>
+import Tabla from '../components/Tabla.vue';
 import store from "../store/index";
-export default {
-  
-  name: "Tabs",
 
-  props: {
-    usuario: Object
+export default {
+  name: "Tabs",
+  components: {
+    
+    Tabla,
   },
+
+  props: [
+    "usuario",
+    "configuracion_ingresos_egresos",
+    "configuracion_deuda"
+  ],
 
   data() {
       return {
@@ -133,7 +60,12 @@ export default {
  
 
   created() {
-    this.universalTabs()
+    
+  },
+  watch: {
+    usuario(){
+      this.universalTabs()
+    }
   },
 
   methods: {

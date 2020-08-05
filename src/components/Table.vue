@@ -124,12 +124,12 @@
 <script>
 import { mapState } from "vuex";
 import { FadeTransition } from "vue2-transitions";
-import Modal_AU from "./Modal_AU"
+
 import store from "../store/index";
 export default {
   name: "Table",
   components: {
-    Modal_AU,
+    
     FadeTransition,
   },
   props: {
@@ -155,6 +155,14 @@ export default {
   
   created() {
     
+  },
+
+  computed: {
+    pagination:{
+      get:function(){
+        return this.usuarios
+      }
+    }
   },
   watch: {
 

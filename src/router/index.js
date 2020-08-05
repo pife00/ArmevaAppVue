@@ -11,22 +11,6 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
   },
   {
-    path: '/Tablas',
-    name: 'Tablas',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "egresos" */ '../views/Tablas.vue')
-  },
-  {
-    path: '/Mapa',
-    name: 'Mapa',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "ingresos" */ '../views/Mapa.vue')
-  },
-  {
     path: '/usuarios',
     name: 'usurios',
     // route level code-splitting

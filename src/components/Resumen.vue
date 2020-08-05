@@ -36,7 +36,10 @@
     </div>
 
     <div>
-      <div class="divider is-info">Datos</div>
+      <div class="divider is-info">
+        <a  @click="showPorcentajes =!showPorcentajes" >Porcentajes</a>
+      </div>
+      
     </div>
 
     <div class="columns">
@@ -96,7 +99,7 @@
           </export-excel>
         </div>
         <br />
-        <column-chart
+        <column-chart v-show="showPorcentajes == false"
           :colors="['#02AC1E']"
           :data="
         [
@@ -109,7 +112,17 @@
         ]"
           thousands=","
         ></column-chart>
+
+        <div v-show="showPorcentajes" v-if="balance.length > 0" class="column">
+        <pie-chart
+        suffix="%"
+          :data="filtro_porcentaje('Precio','Ingresos','Productos')"
+        ></pie-chart>
       </div>
+      </div>
+
+       
+
     </div>
     <br />
 
@@ -229,7 +242,9 @@
         </div>
       </div>
     </div>
+    
   </div>
+ 
 </template>
 
 <script>
@@ -251,6 +266,7 @@ export default {
       TotalEgresos: [],
       TotalDeudas: [],
       TotalUltimate: [],
+      showPorcentajes:false
     };
   },
 
@@ -265,6 +281,9 @@ export default {
   },
 
   methods: {
+    Porcentaje(){
+      
+    },
     descargas(valor, criterio, categoria) {
       var p = 0;
       var ultimateFilter = [];
@@ -355,7 +374,8 @@ export default {
     },
 
     formatNumber(data) {
-      var format = [];
+      if(data > 0){
+        var format = [];
       var Number = 0;
       if (typeof data == "number") {
         Number = Intl.NumberFormat("es-CO", {
@@ -365,6 +385,37 @@ export default {
 
         return Number;
       }
+      }else{
+        return "Esperando Datos"
+      }
+      
+    },
+
+    filtro_porcentaje(valor,categoria,criterio){
+      var ultimateFilter = [];
+      var Porcentaje=[];
+      var filtro = this.balance.filter((data) => {
+        return data.Categoria == categoria;
+      });
+      var noRepeat = [...new Set(filtro.map((a) => a[criterio]))];
+      
+      for (let i = 0; i < noRepeat.length; i++) {
+        for (let j = 0; j < filtro.length; j++) {
+          if(noRepeat[i] == filtro[j][criterio]){
+            var values = this.unique(filtro, valor, noRepeat[i], criterio);
+            ultimateFilter[i] = { Nombre: values[0], [valor]: values[1] };
+          }
+        }
+      }
+      
+      for (let i = 0; i < ultimateFilter.length; i++) {
+        Porcentaje[i] = [ultimateFilter[i].Nombre,
+        Math.round(
+        (ultimateFilter[i].Precio/this.resumen(this.balance,'Ingresos'))*100)
+        ]
+      }
+      return Porcentaje
+      
     },
 
     filtro_universal(indice, valor, criterio, categoria) {
