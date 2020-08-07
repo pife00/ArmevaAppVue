@@ -46,11 +46,11 @@
       <div class="column">
         <div class="box">
           <p class="heading">Ingresos</p>
-          <p class="title ingresos">{{formatNumber(resumen(this.balance,'Ingresos'))}}</p>
+          <p class="title ingresos">{{MonedaLocal(resumen(this.balance,'Ingresos'))}}</p>
         </div>
         <div class="box">
           <p class="heading">Egresos</p>
-          <p class="title egresos">{{formatNumber(resumen(this.balance,'Egresos'))}}</p>
+          <p class="title egresos">{{MonedaLocal(resumen(this.balance,'Egresos'))}}</p>
         </div>
       </div>
 
@@ -59,11 +59,11 @@
           <p class="heading">Balance</p>
           <p
             class="title balance"
-          >{{formatNumber( resumen(this.balance,'Ingresos')- resumen(this.balance,'Egresos'))}}</p>
+          >{{MonedaLocal( resumen(this.balance,'Ingresos')- resumen(this.balance,'Egresos'))}}</p>
         </div>
         <div class="box">
           <p class="heading">Deuda</p>
-          <p class="title" style="color:slategray">{{formatNumber( resumen(this.balance,'Deuda') )}}</p>
+          <p class="title" style="color:slategray">{{MonedaLocal( resumen(this.balance,'Deuda') )}}</p>
         </div>
       </div>
     </div>
@@ -249,7 +249,7 @@
 
 <script>
 import store from "../store/index";
-
+import {mixins} from "../mixins";
 export default {
   name: "Resumen",
   store,
@@ -269,6 +269,7 @@ export default {
       showPorcentajes:false
     };
   },
+  mixins:[mixins],
 
   watch: {
     Fecha(value) {
@@ -339,23 +340,7 @@ export default {
       }
     },
 
-    formatDate(data) {
-      var fecha = [{}];
-      var options = {
-        weekday: "long",
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-        second: "numeric",
-        hour12: false,
-        timeZone: "America/Bogota",
-      };
-      return (fecha = new Intl.DateTimeFormat("es-Co", options).format(
-        new Date(data)
-      ));
-    },
+    
 
     resumen(data, value) {
       var msg = "No Data";
@@ -371,24 +356,6 @@ export default {
       } else {
         return msg;
       }
-    },
-
-    formatNumber(data) {
-      if(data > 0){
-        var format = [];
-      var Number = 0;
-      if (typeof data == "number") {
-        Number = Intl.NumberFormat("es-CO", {
-          style: "currency",
-          currency: "COP",
-        }).format(data);
-
-        return Number;
-      }
-      }else{
-        return "Esperando Datos"
-      }
-      
     },
 
     filtro_porcentaje(valor,categoria,criterio){

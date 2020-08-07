@@ -51,12 +51,10 @@ import store from "../store/index";
 import Tabla from '../components/Tabla'
 import Panel_de_Control from "../components/Panel_de_Control";
 import Usuario_Perfil from '../components/Usuario_Perfil';
-import usuariosTabla from "../components/usuariosTabla";
 import Registro_Actividad from '../components/Registro_Actividad';
 
 export default {
   components: {
-    usuariosTabla,
     Panel_de_Control,
     Usuario_Perfil,
     Tabla,

@@ -1,11 +1,14 @@
+import store from "./store";
+
 export const mixins = {
   methods: {
     MonedaLocal(data) {
+      var numero;
       if (typeof data == "number") {
-        var numero = new Intl.NumberFormat().format(data);
+        numero = new Intl.NumberFormat().format(data);
         return numero;
       } else {
-        var numero = new Intl.NumberFormat().format(data);
+        numero = new Intl.NumberFormat().format(data);
         return numero;
       }
     },
@@ -118,13 +121,9 @@ export const mixins = {
       if (this.UsuarioExiste == false) {
         this.BotonActivo = false;
       }
-      if (this.ModoAbono == true) {
-        this.BotonActivo = true;
-        document.getElementById("Abono").textContent = "Abono";
-      }
     },
 
-    BuscarUsuario() {
+    BuscarUsuarioRegistro() {
       if (this.Datos.Nombre == undefined || this.Datos.Nombre == "") {} else {
         this.axios
           .post("/userPartial", {
@@ -146,15 +145,15 @@ export const mixins = {
       }
     },
 
-    BuscarRegistro() {
+    BuscarUsuario() {
       if (this.Datos.Nombre == undefined || this.Datos.Nombre == "") {} else {
         this.axios
-          .post("/registroPartial", {
+          .post("/userPartial", {
             Nombre: this.Datos.Nombre
           })
           .then((result) => {
-            this.UsuariosParciales = this.NoRepetidos(result.data);
-            this.$store.state.OrdenBusquedaParcial = result.data;
+            this.UsuariosParciales = result.data;
+            store.state.UsuarioParcial = result.data;
           });
         this.MostrarListaUsuarios = true;
 
@@ -169,22 +168,92 @@ export const mixins = {
       }
     },
 
+    BuscarRegistro() {
+      var Nombre = this.SoloNombre(store.state.DataBase,'Nombre');
+      var Productos = this.SoloNombre(store.state.DataBase,'Productos');
+      var referencias = Nombre.concat(Productos);
+
+      var Datos= [{}];
+      var resultado = [];
+
+      var BuscaNombre = store.state.DataBase.filter(a=>{
+        return a.Nombre == this.Datos.Nombre;           
+      });
+      var BuscaProductos = store.state.DataBase.filter(a=>{
+        return a.Productos == this.Datos.Nombre;           
+      });
+
+      var datos = BuscaNombre.concat(BuscaProductos);
+
+      if(this.Datos.Nombre != ""){
+        for (let i = 0; i < referencias.length; i++) {
+          if(referencias[i].Nombre.match(this.Datos.Nombre))
+          {
+             resultado.push(referencias[i]);
+          }
+        }
+        this.RegistrosParciales = resultado;
+        store.state.RegistroParcial = resultado ;
+        this.MostrarListaRegistros = true; 
+      }else{
+        this.MostrarListaRegistros = false;
+        store.state.RegistroParcial = "";
+      }
+        
+
+     if(datos.length > 0){
+      for (let i = 0; i < datos.length; i++) {
+        Datos[i]= {
+          _id:datos[i]._id,
+          Nombre:datos[i].Nombre,
+          Productos:datos[i].Productos,
+          Precio:this.MonedaLocal(datos[i].Precio),
+          Cantidad:datos[i].Cantidad,
+          Categoria:datos[i].Categoria,
+          Fecha:this.FechaLocal(datos[i].Fecha),
+        };
+      }
+      store.state.RegistroParcial = Datos;
+      this.MostrarListaRegistros = false;
+     }
+     
+    },
+
+    SoloNombre(data,criterio){
+      var Nombre=[];
+      var Data = [];
+      for (let i = 0; i < data.length; i++) {
+        Nombre[i] = {Nombre:data[i][criterio]};
+      }
+      Data = [...new Set(Nombre.map((a) => a.Nombre))];
+      for (let i = 0; i < Data.length; i++) {
+        Data[i] = {Nombre:Data[i]};
+      }
+      return Data;
+    },
+
     UsuarioSeleccionado(data) {
       this.MostrarListaUsuarios = false;
       this.UsuarioExiste = true;
       this.Datos.Nombre = data.Nombre;
       this.UsuarioElegido = data.Nombre;
-      //this.UsuarioDeuda = data.Nombre;
-      //this.UsuarioAbono = this.Datos.Precio;
+      store.state.RegistroParcial = data;
     },
 
-    Seleccion(data) {
+    ModalUsuarioSeleccionado(data) {
+      this.UsuarioExiste = true;
+      this.Datos.Nombre = data.Nombre;
+      this.UsuarioElegido = data.Nombre;
+      this.UsuarioDeuda = data.Nombre;
+      this.UsuarioAbono = this.Datos.Precio;
+    },
+
+    RegistroSeleccionado(data) {
       this.MostrarListaUsuarios = false;
       this.UsuarioExiste = true;
       this.Datos.Nombre = data.Nombre;
       this.UsuarioElegido = data.Nombre;
-      this.$store.state.OrdenBusquedaParcial = data.Nombre;
-      
+      store.state.RegistroParcial = data;
       //this.UsuarioDeuda = data.Nombre;
       //this.UsuarioAbono = this.Datos.Precio;
     },
@@ -193,7 +262,7 @@ export const mixins = {
       var Datos=[];
       var noRepeat = [...new Set(data.map((a) => a.Nombre))];
       for (let i = 0; i < noRepeat.length; i++) {
-        Datos[i]={Nombre:noRepeat[i]}
+        Datos[i]={Nombre:noRepeat[i]};
       }
       return Datos;
     },

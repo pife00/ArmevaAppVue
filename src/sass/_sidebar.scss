@@ -1,11 +1,13 @@
 
-.menu{
-    height: auto;
-    background-color: $light;
-    position: fixed; /* Fixed Sidebar (stay in place on scroll) */
-    z-index: 1; /* Stay on top */
-    top: 0; /* Stay at the top */
-    right: 0;
+.menuSide{
+  margin: 0;
+  padding: 0;
+  width: auto;
+  background-color:$light;
+  position: fixed;
+  height: auto;
+  right: 0;
+  top: 0;
 
     table{
          

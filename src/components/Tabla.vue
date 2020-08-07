@@ -55,7 +55,7 @@
 <script>
 import Modal_Eliminar from "../components/Modal_Eliminar";
 import store from "../store/index.js";
-import Tabs from "../components/Tabs";
+
 import { mixins } from "../mixins.js";
 export default {
   name: "Tabla",
@@ -95,11 +95,17 @@ export default {
     Datos_de_Tabla: {
       get: function (value) {
         if (this.modo == "Registro") {
-           return this.TablaOrdenRegistro(this.Orden,'Categoria');
+          if(store.state.RegistroParcial == ""){
+            return this.TablaOrdenRegistro(this.Orden,'Categoria');
+          }else{
+            return store.state.RegistroParcial;
+          }
+           
         }
 
         if (this.modo == "Usuarios") {
-          var Datos = [{}];
+          if(store.state.UsuarioParcial == ""){
+            var Datos = [{}];
           for (let i = 0; i < this.datos.length; i++) {
             Datos[i] = {
               _id: this.datos[i]._id,
@@ -111,6 +117,11 @@ export default {
             };
           }
           return Datos;
+          }else{
+            return store.state.UsuarioParcial;
+          }
+
+          
         }
 
         if(this.modo == "Tabs"){
@@ -137,9 +148,6 @@ export default {
       return store.state.OrdenRegistro;
     },
 
-    OrdenBusquedaParcial(){
-     return store.state.OrdenBusquedaParcial;
-    }
   },
   methods: {
     ModalEliminar(data) {

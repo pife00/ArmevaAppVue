@@ -28,7 +28,7 @@
               <input v-model="Datos.Nombre" class="input" type="text" placeholder="Nombre" />
               <ol v-if="MostrarListaUsuarios" class="my-list">
                 <li
-                  @click="UsuarioSeleccionado(item)"
+                  @click="ModalUsuarioSeleccionado(item)"
                   v-for="item in UsuariosParciales"
                   :key="item._id"
                 >{{item.Nombre}}</li>
@@ -58,7 +58,7 @@
             </p>
           </div>
 
-          <div class="field">
+          <div v-if="ModoAbono == false" class="field">
             <div class="columns">
               <div class="column">
                 <label class="label">Producto</label>
@@ -95,32 +95,52 @@
         </section>
         <footer class="modal-card-foot">
           <a
+          v-if="ModoAbono == false"
             :disabled="BotonActivo == false"
             @click="EnviarDatos()"
             class="card-footer-item button is-info"
           >{{Modo}}</a>
+          <a
+          v-if="ModoAbono"
+            :disabled="BotonActivo == false"
+            @click="Abono()"
+            class="card-footer-item button is-info"
+          >Abono</a>
           <a @click="Cerrar" class="card-footer-item button">Cancelar</a>
         </footer>
       </div>
-    </div>
+      <Modal_Abono v-if="$store.state.ModalAbono == true" 
+    :usuario = "UsuarioDeuda"
+    :abono = "Datos.Precio"
+    ></Modal_Abono>
   </div>
+    </div>
+    
+
 </template>
 <script>
 import store from "../store/index";
+import Modal_Abono from '../components/Modal_Abono';
 import { mixins } from "@/mixins";
 
 export default {
   name: "Registro_Actividad",
+  components:{
+    Modal_Abono,
+  },
   data() {
     return {
       Datos: [],
       UsuariosParciales: [],
       UsuarioElegido: "",
+      UsuarioDeuda:[],
+      UsuarioAbono:"",
       MostrarListaUsuarios: false,
       UsuarioExiste: null,
       BotonActivo: false,
       PrecioReal: 0,
       Modo: "",
+      ModoAbono : false,
     };
   },
   created() {
@@ -141,31 +161,42 @@ export default {
 
     "Datos.Nombre"() {
       if (this.UsuarioElegido == "") {
-        this.BuscarUsuario();
+        this.BuscarUsuarioRegistro();
       } else {
         this.UsuarioElegido = "";
       }
     },
     "Datos.Precio"() {
       //this.PrecioReal = this.NumeroReal(this.Datos.Precio);
-      this.Datos.Precio = this.NumeroFalso;
+     // this.Datos.Precio = this.NumeroFalso;
     },
+
+    'Datos.Categoria'(){
+      if(this.Datos.Categoria == 'Abono'){
+        this.ModoAbono = true;
+      }else{
+        this.ModoAbono = false;
+      }
+    }
   },
   mixins: [mixins],
 
   computed: {
-    NumeroFalso() {
+   /* NumeroFalso() {
       var numero = this.NumeroSinPuntos(this.Datos.Precio);
       return this.MonedaLocal(numero);
     },
     NumeroReal() {
       return this.NumeroSinPuntos(this.NumeroFalso);
-    },
+    },*/
   },
   methods: {
     Cerrar() {
       store.state.RegistroNuevo =  false;
       store.state.Registro_Actividad = false;
+    },
+    Abono(){
+      store.state.ModalAbono = true
     },
 
     EnviarDatos() {
@@ -181,7 +212,7 @@ export default {
             .post("/getData", {
               Nombre: this.Datos.Nombre,
               Productos: this.Datos.Productos,
-              Precio: this.NumeroReal,
+              Precio: this.Datos.Precio,
               Cantidad: this.Datos.Cantidad,
               Categoria: this.Datos.Categoria,
               Telefono: "No datos",
@@ -207,7 +238,7 @@ export default {
             Nombre: this.Datos.Nombre,
             Productos: this.Datos.Productos,
             Cantidad: this.Datos.Cantidad,
-            Precio: this.NumeroReal,
+            Precio: this.Datos.Precio,
             Categoria: this.Datos.Categoria,
             
           })

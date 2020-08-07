@@ -15,9 +15,16 @@
               />
               <ul v-if="MostrarListaUsuarios" class="my-list">
                 <li v-for="item in UsuariosParciales"
-                @click="Seleccion(item)"
+                @click="UsuarioSeleccionado(item)"
                  :key="item._id">{{item.Nombre}}</li>
               </ul>
+
+              <ul v-if="MostrarListaRegistros" class="my-list">
+                <li v-for="item in RegistrosParciales"
+                @click="RegistroSeleccionado(item)"
+                 :key="item._id">{{item.Nombre}}</li>
+              </ul>
+
               <p v-if="UsuarioExiste == false" style="color:red">
                 <span class="icon has-text-danger">
                   <i class="fas fa-ban"></i>
@@ -106,7 +113,10 @@ export default {
       Datos:[],
       UsuarioExiste: null,
       UsuarioElegido:"",
+      RegistroElegido:"",
       MostrarListaUsuarios: false,
+      MostrarListaRegistros:false,
+      RegistrosParciales:[],
       UsuariosParciales: [],
       Modo: "",
       Orden:"Total",
@@ -163,8 +173,24 @@ export default {
   watch: {
 
     'Datos.Nombre'(){
-      
-      
+      if(store.state.ModoTabla == 'usuarios'){      
+          if(this.UsuarioElegido == "" ){
+            this.BuscarUsuario(); 
+          }else{
+            this.UsuarioElegido = ""
+            //store.state.RegistroParcial = "";
+          }
+      }
+
+      if(store.state.ModoTabla == 'registros'){
+        if(this.RegistroElegido == ""){
+          this.BuscarRegistro();
+        }
+        
+      }else{
+        this.RegistroElegido = ""
+      }
+
     },
 
     Orden(){
