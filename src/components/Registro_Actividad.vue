@@ -9,10 +9,12 @@
         </header>
         <section class="modal-card-body">
           <div class="field">
+            <p v-if="notificacion[0].Categoria == true || notificacion[0].Precio == true " 
+            class="has-text-danger">Debe llenar los formularios vacios</p>
             <div class="control">
-              <label class="label">Categoria</label>
-              <div class="select">
-                <select v-model="Datos.Categoria">
+              <label :class="CategoriaValidador" class="label">Categoria</label>
+              <div :class="CategoriaValidador"  class="select">
+                <select   v-model="Datos.Categoria">
                   <option value="Ingresos">Ingresos</option>
                   <option value="Egresos">Egresos</option>
                   <option value="Deuda">Deuda</option>
@@ -20,12 +22,15 @@
                 </select>
               </div>
             </div>
+            
           </div>
 
           <div class="field">
             <label class="label">Nombre</label>
             <div class="control">
-              <input v-model="Datos.Nombre" class="input" type="text" placeholder="Nombre" />
+              <input v-model="Datos.Nombre" 
+              :class="{'is-primary':UsuarioExiste}"
+              class="input" type="text" placeholder="Nombre" />
               <ol v-if="MostrarListaUsuarios" class="my-list">
                 <li
                   @click="ModalUsuarioSeleccionado(item)"
@@ -63,7 +68,7 @@
               <div class="column">
                 <label class="label">Producto</label>
                 <div class="control">
-                  <input class="input" v-model="Datos.Productos" type="text" list="Productos" />
+                  <input :class="ProductosValidador" class="input" v-model="Datos.Productos" type="text" list="Productos" />
                   <datalist id="Productos">
                     <option value="Pollo">Pollo</option>
                     <option value="Gallinita">Gallinita</option>
@@ -74,7 +79,10 @@
               </div>
               <div class="column is-5">
                 <label class="label">Cantidad</label>
-                <input v-model="Datos.Cantidad" class="input" type="number" min="1" max="100" />
+                <input v-model="Datos.Cantidad" 
+                :class="CantidadValidador"
+                class="input" 
+                type="number" min="1" max="100" />
               </div>
             </div>
           </div>
@@ -87,6 +95,7 @@
                 id="Precio"
                 name="Precio"
                 class="input"
+                :class="PrecioValidador"
                 type="text"
                 placeholder="Precio"
               />
@@ -130,7 +139,11 @@ export default {
   },
   data() {
     return {
-      Datos: [],
+      Datos:[],
+      
+      notificacion:[{
+        Categoria:null,Productos:null,
+        Cantidad:null,Precio:null}],
       UsuariosParciales: [],
       UsuarioElegido: "",
       UsuarioDeuda:[],
@@ -144,7 +157,8 @@ export default {
     };
   },
   created() {
-    if (store.state.RegistroElegido != []) {
+    
+if (store.state.RegistroElegido != []) {
       
       this.Datos = store.state.RegistroElegido;
       this.Modo = "Editar";
@@ -169,9 +183,31 @@ export default {
     "Datos.Precio"() {
       //this.PrecioReal = this.NumeroReal(this.Datos.Precio);
      // this.Datos.Precio = this.NumeroFalso;
+     this.Datos.Precio = this.NumeroSinPuntos(this.Datos.Precio)
+     if(this.Datos.Precio != ''){
+       this.notificacion[0].Precio = false;
+     }
+    },
+
+    "Datos.Productos"() {
+     
+     if(this.Datos.Productos != ''){
+       this.notificacion[0].Productos = false;
+     }
+    },
+
+    "Datos.Cantidad"() {
+     
+     if(this.Datos.Cantidad != ''){
+       this.notificacion[0].Cantidad = false;
+     }
     },
 
     'Datos.Categoria'(){
+      if(this.Datos.Categoria != ''){
+       this.notificacion[0].Categoria = false;
+     }
+
       if(this.Datos.Categoria == 'Abono'){
         this.ModoAbono = true;
       }else{
@@ -182,6 +218,41 @@ export default {
   mixins: [mixins],
 
   computed: {
+     PrecioValidador(){
+      return{
+        'is-danger':this.Datos.Precio == null
+        && this.notificacion[0].Precio == true 
+        ,'is-primary':this.Datos.Precio != '' && 
+        this.notificacion[0].Precio == false
+      }
+    },
+
+    CategoriaValidador(){
+      return{
+        'is-danger':this.Datos.Categoria == null
+        && this.notificacion[0].Categoria == true 
+        ,'is-primary':this.Datos.Categoria != '' && 
+        this.notificacion[0].Categoria == false
+      }
+    },
+
+    ProductosValidador(){
+      return{
+        'is-danger':this.Datos.Productos == null
+        && this.notificacion[0].Productos == true 
+        ,'is-primary':this.Datos.Productos != '' && 
+        this.notificacion[0].Productos == false
+      }
+    },
+
+    CantidadValidador(){
+      return{
+        'is-danger':this.Datos.Cantidad == null
+        && this.notificacion[0].Cantidad == true 
+        ,'is-primary':this.Datos.Cantidad != '' && 
+        this.notificacion[0].Cantidad == false
+      }
+    },
    /* NumeroFalso() {
       var numero = this.NumeroSinPuntos(this.Datos.Precio);
       return this.MonedaLocal(numero);
@@ -191,6 +262,7 @@ export default {
     },*/
   },
   methods: {
+
     Cerrar() {
       store.state.RegistroNuevo =  false;
       store.state.Registro_Actividad = false;
@@ -199,28 +271,62 @@ export default {
       store.state.ModalAbono = true
     },
 
+    Encontrar(dato,criterio,condicion){
+      return dato[criterio] == condicion
+    },
+
     EnviarDatos() {
-      if (this.Modo == "Añadir") {
-        if (
-          this.Datos.Categoria == undefined ||
-          this.Datos.Nombre == undefined
-        ) {
-          this.notificacion = true;
-          this.closeNotificacion();
-        } else {
+     
+      
+      if(this.notificacion[0].Categoria == false
+      && this.notificacion[0].Precio == false 
+      && this.notificacion[0].Cantidad == false   
+      && this.notificacion[0].Productos == false){
+
+        if (this.Modo == "Añadir") {
+         
+            this.axios
+              .post("/getData", {
+                Nombre: this.Datos.Nombre,
+                Productos: this.Datos.Productos,
+                Precio: this.Datos.Precio,
+                Cantidad: this.Datos.Cantidad,
+                Categoria: this.Datos.Categoria,
+                Telefono: "No datos",
+              })
+              .then((result) => {
+                this.$store.commit("loadDataBase");
+                this.$store.commit("loadDataBaseUser");
+                this.Datos.Nombre = "";
+                this.Datos.Productos = "";
+                this.Datos.Precio = "";
+                this.Datos.Cantidad = "";
+                this.Datos.Categoria = "";
+                this.Cerrar();
+              })
+              .catch((err) => {});  
+        }
+  
+        if (this.Modo == "Editar") {
           this.axios
-            .post("/getData", {
+            .post("/getUpdate", {
+              _id: this.Datos._id,
               Nombre: this.Datos.Nombre,
               Productos: this.Datos.Productos,
-              Precio: this.Datos.Precio,
               Cantidad: this.Datos.Cantidad,
+              Precio: this.Datos.Precio,
               Categoria: this.Datos.Categoria,
-              Telefono: "No datos",
+              
             })
             .then((result) => {
+              if(store.state.UsuarioPerfil == 'editar_usuario'){
+                store.state.UsuarioPerfil = null;
+                store.state.ModoTabla = "usuarios";
+              }
               this.$store.commit("loadDataBase");
               this.$store.commit("loadDataBaseUser");
-              this.Datos.Nombre = "";
+              
+              (this.Datos._id = ""), (this.Datos.Nombre = "");
               this.Datos.Productos = "";
               this.Datos.Precio = "";
               this.Datos.Cantidad = "";
@@ -229,35 +335,13 @@ export default {
             })
             .catch((err) => {});
         }
+      }else {
+         for(const prop in this.notificacion[0]){
+        if(this.notificacion[0][prop] == null){
+          this.notificacion[0][prop] = true
+        }
+        
       }
-
-      if (this.Modo == "Editar") {
-        this.axios
-          .post("/getUpdate", {
-            _id: this.Datos._id,
-            Nombre: this.Datos.Nombre,
-            Productos: this.Datos.Productos,
-            Cantidad: this.Datos.Cantidad,
-            Precio: this.Datos.Precio,
-            Categoria: this.Datos.Categoria,
-            
-          })
-          .then((result) => {
-            if(store.state.UsuarioPerfil == 'editar_usuario'){
-              store.state.UsuarioPerfil = null;
-              store.state.ModoTabla = "usuarios";
-            }
-            this.$store.commit("loadDataBase");
-            this.$store.commit("loadDataBaseUser");
-            
-            (this.Datos._id = ""), (this.Datos.Nombre = "");
-            this.Datos.Productos = "";
-            this.Datos.Precio = "";
-            this.Datos.Cantidad = "";
-            this.Datos.Categoria = "";
-            this.Cerrar();
-          })
-          .catch((err) => {});
       }
     },
   },

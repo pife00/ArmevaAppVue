@@ -17,8 +17,9 @@
               <div class="field">
                 <p class="title">{{modo}}</p>
                 <input v-model="Datos._id" class="input" style="border:none" type="text" />
+                <p v-if="notificacion.Nombre == true" class="has-text-danger">Por lo menos nombre debe ser llenado</p>
                 <label class="label">Nombre:</label>
-                <input v-model="Datos.Nombre" class="input" type="text" />
+                <input :class="VerificarNombre" v-model="Datos.Nombre" class="input" type="text" />
                 <label class="label">Telefono:</label>
                 <input v-model="Datos.Telefono" class="input" type="text" />
                 <label class="label">Direccion:</label>
@@ -73,6 +74,7 @@ export default {
   props: ["usuario", "modo"],
   data() {
     return {
+      notificacion: { Nombre: null },
       configuracion_ingresos_egresos: [
         {
           clave: "Nombre",
@@ -122,49 +124,64 @@ export default {
           titulo: "Fecha",
         },
       ],
-      DatosReactivos:[],
+      DatosReactivos: [],
       tabActive: 1,
-      tabData:[] ,
+      tabData: [],
       tabIngresos: [],
       tabEgresos: [],
       tabDeuda: [],
     };
   },
 
+  watch: {
+    "Datos.Nombre"() {
+      if (this.Datos.Nombre != "") {
+        this.notificacion.Nombre = false;
+      } else if (this.Datos.Nombre == "") {
+        this.notificacion.Nombre = true;
+      }
+    },
+  },
+
   computed: {
+    VerificarNombre() {
+      return {
+        "is-danger":
+          this.Datos.Precio == null && this.notificacion.Nombre == true,
+        "is-primary":
+          this.Datos.Nombre != "" && this.notificacion.Nombre == false,
+      };
+    },
+
     Datos() {
       return this.DatosReactivos;
     },
 
-    TabsDatos(){
-      this.axios.post("userDeuda",
-      {Nombre:this.usuario.Nombre}
-      ).then((result)=>{
-        this.tabData = result.data;
-        return this.tabData;
-      })
-    }
+    TabsDatos() {
+      this.axios
+        .post("userDeuda", { Nombre: this.usuario.Nombre })
+        .then((result) => {
+          this.tabData = result.data;
+          return this.tabData;
+        });
+    },
   },
 
   created() {
-    if(this.modo == "Nuevo Usuario"){
-      
+    if (this.modo == "Nuevo Usuario") {
     }
-    if(this.modo == "Editar Usuario"){
+    if (this.modo == "Editar Usuario") {
       this.DatosReactivos = this.usuario;
       this.universalTabs();
     }
-    
   },
-  
 
   methods: {
     Cerrar() {
       store.state.UsuarioPerfil = null;
       store.state.ModoTabla = "usuarios";
-      
     },
-    
+
     tabSeleccionada(select) {
       this.tabActive = select;
       switch (select) {
@@ -202,11 +219,8 @@ export default {
     },
 
     EnvioDatos() {
-      if (this.modo == "Nuevo Usuario") {
-        if (this.Datos.Nombre == undefined) {
-          //this.notificacion = true;
-          // this.closeNotificacion();
-        } else {
+      if (this.notificacion.Nombre == false) {
+        if (this.modo == "Nuevo Usuario") {
           this.axios
             .post("/newUser", {
               Nombre: this.Datos.Nombre,
@@ -225,7 +239,6 @@ export default {
             })
             .catch((err) => {});
         }
-      }
         if (this.modo == "Editar Usuario") {
           this.axios
             .post("/getUpdateUser", {
@@ -240,7 +253,13 @@ export default {
               this.Cerrar();
             });
         }
-      
+      } else {
+        for (const prop in this.notificacion) {
+          if (this.notificacion[prop] == null) {
+            this.notificacion[prop] = true;
+          }
+        }
+      }
     },
   },
 };

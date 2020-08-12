@@ -1,5 +1,16 @@
 <template>
   <div>
+      <nav class="pagination" role="navigation" aria-label="pagination">
+        <ul v-if="PaginaTotal > 0" class="pagination-list">
+          <li v-for="PaginaNumero in PaginaTotal" :key="PaginaNumero">
+            <a :key="PaginaNumero" class="pagination-link" 
+            @click="PaginaElegida(PaginaNumero)" href="#"
+            :class="{'is-current':PaginaCorriente == PaginaNumero}"
+            >{{PaginaNumero}}</a>
+          </li>
+        </ul>
+      </nav>
+
     <table
       :id="modo"
       v-if="datos.length>0"
@@ -12,7 +23,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="objetos in Datos_de_Tabla" :key="objetos._id">
+        <tr v-for="objetos in Paginacion" :key="objetos._id">
           <td
             @click="EditarDatos(objetos)"
             v-for="columna in configuracion"
@@ -35,6 +46,9 @@
         </tr>
       </tfoot>
     </table>
+
+  
+
     <Modal_Eliminar
       modo="usuario"
       :datos="DatosModalEliminar"
@@ -71,6 +85,9 @@ export default {
     return {
       DatosModalEliminar: [],
       UsuarioElegido:[],
+      PaginaCorriente: 1,
+      ObjetosPorPagina: 50,
+      Conteo: 0,
     };
   },
   mixins: [mixins],
@@ -148,8 +165,25 @@ export default {
       return store.state.OrdenRegistro;
     },
 
+    PaginaTotal() {
+      return Math.ceil(this.Conteo / this.ObjetosPorPagina);
+    },
+    Paginacion() {
+      this.Conteo = this.Datos_de_Tabla.length;
+      if (this.PaginaCorriente >= this.PaginaTotal) {
+        this.PaginaCorriente = this.PaginaTotal;
+      }
+      var indice =
+        this.PaginaCorriente * this.ObjetosPorPagina - this.ObjetosPorPagina;
+      return this.Datos_de_Tabla.slice(indice, indice + this.ObjetosPorPagina);
+    },
+
   },
   methods: {
+    PaginaElegida(PaginaNumero){
+      this.PaginaCorriente = PaginaNumero;
+    },
+
     ModalEliminar(data) {
       if (this.modo == "Usuarios") {
         this.DatosModalEliminar = data;

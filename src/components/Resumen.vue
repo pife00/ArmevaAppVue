@@ -37,9 +37,8 @@
 
     <div>
       <div class="divider is-info">
-        <a  @click="showPorcentajes =!showPorcentajes" >Porcentajes</a>
+        <a @click="showPorcentajes =!showPorcentajes">Porcentajes</a>
       </div>
-      
     </div>
 
     <div class="columns">
@@ -84,7 +83,7 @@
         ></pie-chart>
       </div>
     </div>
-    
+
     <div v-if="balance.length > 0" class="columns">
       <div class="column box">
         <h1 class="title">Ingresos</h1>
@@ -99,7 +98,8 @@
           </export-excel>
         </div>
         <br />
-        <column-chart v-show="showPorcentajes == false"
+        <column-chart
+          v-show="showPorcentajes == false"
           :colors="['#02AC1E']"
           :data="
         [
@@ -114,15 +114,9 @@
         ></column-chart>
 
         <div v-show="showPorcentajes" v-if="balance.length > 0" class="column">
-        <pie-chart
-        suffix="%"
-          :data="filtro_porcentaje('Precio','Ingresos','Productos')"
-        ></pie-chart>
+          <pie-chart suffix="%" :data="filtro_porcentaje('Precio','Ingresos','Productos')"></pie-chart>
+        </div>
       </div>
-      </div>
-
-       
-
     </div>
     <br />
 
@@ -242,14 +236,12 @@
         </div>
       </div>
     </div>
-    
   </div>
- 
 </template>
 
 <script>
 import store from "../store/index";
-import {mixins} from "../mixins";
+import { mixins } from "../mixins";
 export default {
   name: "Resumen",
   store,
@@ -266,14 +258,23 @@ export default {
       TotalEgresos: [],
       TotalDeudas: [],
       TotalUltimate: [],
-      showPorcentajes:false
+      showPorcentajes: false,
     };
   },
-  mixins:[mixins],
+  mixins: [mixins],
 
   watch: {
     Fecha(value) {
       this.changeFecha(value);
+    },
+  },
+
+  computed: {
+    datos() {
+      return this.balance;
+    },
+    usuarios() {
+      return this.user;
     },
   },
 
@@ -282,9 +283,7 @@ export default {
   },
 
   methods: {
-    Porcentaje(){
-      
-    },
+    Porcentaje() {},
     descargas(valor, criterio, categoria) {
       var p = 0;
       var ultimateFilter = [];
@@ -313,34 +312,46 @@ export default {
       }
     },
 
+    E(data,id){
+      return data._id == id;
+    },
+
     descargasDeuda(categoria) {
-      var p = 0;
       var filtro = [];
       var ultimateFilter = [];
 
-      if (this.balance.length > 0) {
-        filtro = this.balance.filter((data) => {
+      if (this.datos.length > 0) {
+        filtro = this.datos.filter((data) => {
           return data.Categoria == categoria;
         });
 
         for (let i = 0; i < filtro.length; i++) {
           for (let j = 0; j < this.user.length; j++) {
             if (filtro[i].Nombre == this.user[j].Nombre) {
-              filtro[i].Telefono = this.user[j].Telefono;
-            }
+              filtro[i].Telefono = this.user[j].Telefono;       
+            }         
           }
         }
+        
+
+        var FiltroDefinitivo = filtro.map(function (x) {
+          return {
+            Nombre: x.Nombre,
+            Productos: x.Productos,
+            Precio: x.Precio,
+            "#": x.Cantidad,
+            Telefono: x.Telefono,
+            Fecha: x.Fecha,
+          };
+        });
 
         var fecha = new Date();
-
         return [
-          filtro,
+          FiltroDefinitivo,
           categoria + " " + new Intl.DateTimeFormat().format(fecha),
         ];
       }
     },
-
-    
 
     resumen(data, value) {
       var msg = "No Data";
@@ -358,31 +369,34 @@ export default {
       }
     },
 
-    filtro_porcentaje(valor,categoria,criterio){
+    filtro_porcentaje(valor, categoria, criterio) {
       var ultimateFilter = [];
-      var Porcentaje=[];
+      var Porcentaje = [];
       var filtro = this.balance.filter((data) => {
         return data.Categoria == categoria;
       });
       var noRepeat = [...new Set(filtro.map((a) => a[criterio]))];
-      
+
       for (let i = 0; i < noRepeat.length; i++) {
         for (let j = 0; j < filtro.length; j++) {
-          if(noRepeat[i] == filtro[j][criterio]){
+          if (noRepeat[i] == filtro[j][criterio]) {
             var values = this.unique(filtro, valor, noRepeat[i], criterio);
             ultimateFilter[i] = { Nombre: values[0], [valor]: values[1] };
           }
         }
       }
-      
+
       for (let i = 0; i < ultimateFilter.length; i++) {
-        Porcentaje[i] = [ultimateFilter[i].Nombre,
-        Math.round(
-        (ultimateFilter[i].Precio/this.resumen(this.balance,'Ingresos'))*100)
-        ]
+        Porcentaje[i] = [
+          ultimateFilter[i].Nombre,
+          Math.round(
+            (ultimateFilter[i].Precio /
+              this.resumen(this.balance, "Ingresos")) *
+              100
+          ),
+        ];
       }
-      return Porcentaje
-      
+      return Porcentaje;
     },
 
     filtro_universal(indice, valor, criterio, categoria) {
@@ -504,7 +518,6 @@ export default {
       }
     },
 
-    
     totalChart(Año, Criterio) {
       var data = [];
       var temp = [];
