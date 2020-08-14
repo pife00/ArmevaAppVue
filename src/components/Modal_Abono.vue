@@ -46,7 +46,7 @@
       <nav class="pagination" role="navigation" aria-label="pagination">
        
         <ul class="pagination-list">
-          <li v-for="PaginaNumero in PaginaTotal">
+          <li v-for="PaginaNumero in PaginaTotal" :key="PaginaNumero">
             <a :key="PaginaNumero" class="pagination-link" 
             @click="PaginaElegida(PaginaNumero)" href="#"
             :class="{'is-current':PaginaCorriente == PaginaNumero}"
@@ -125,6 +125,10 @@ export default {
         this.PaginaCorriente * this.ObjetosPorPagina - this.ObjetosPorPagina;
       return this.Deuda.slice(indice, indice + this.ObjetosPorPagina);
     },
+
+    NumeroReal() {
+      return this.NumeroSinPuntos(this.abono);
+    },
   },
 
   watch: {
@@ -197,7 +201,7 @@ export default {
         .post("/abono", {
           _id: data._id,
           Nombre: data.Nombre,
-          Abono: this.abono,
+          Abono: this.NumeroReal,
         })
         .then((result) => {
           this.DeudaData();

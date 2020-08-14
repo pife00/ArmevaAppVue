@@ -5,7 +5,7 @@ export const mixins = {
     MonedaLocal(data) {
       var numero;
       if (typeof data == "number") {
-        numero = new Intl.NumberFormat().format(data);
+        numero = new Intl.NumberFormat('en-Us').format(data);
         return numero;
       } else {
         numero = new Intl.NumberFormat().format(data);
@@ -108,9 +108,18 @@ export const mixins = {
     },
 
     NumeroSinPuntos(data) {
-      var numero = data.replace(/[.]/g, '');
+      var numero = data.replace(/[,]/g, '');
       numero = parseInt(numero);
-      return Number.isNaN(numero) ? 0 : numero;
+      if(Number.isNaN(numero)){
+        return 0;
+      }else{
+        return numero;
+      }
+      
+    },
+
+    SinPuntos(data){
+      return data.split(',').join('');
     },
 
     VerficarExistencia() {
@@ -269,13 +278,21 @@ export const mixins = {
 
     SumaTotal(data) {
       var total = 0;
-      for (let i = 0; i < data.length; i++) {
-        total += this.NumeroSinPuntos( data[i].Precio);
+
+      for (let i = 0; i < data.length; i++) {  
+        total += this.NumeroSinPuntos(data[i].Precio);
       }
 
       return total;
     },
 
+    SumaTotalDeuda(data){
+      var total = 0;
+      for (let i = 0; i < data.length; i++) {
+        total += data[i];
+      }
+      return total;
+    }
     
 
 

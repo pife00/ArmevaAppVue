@@ -1,0 +1,18 @@
+[33m0e6618f[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m Añadido sistema de verificacion y paginacion en tablas
+[33m6641a7d[m Mejorada la Beta de abono
+[33mda05a1a[m Cambiado la interfaz de tabla unido a usuario con editar en movil
+[33m8a2bbda[m Añadido Beta de abono reparado algunos fallos
+[33md885008[m Añadido sistema de verificacion de usuario mejorada la IU
+[33m9649664[m fix minor
+[33ma764370[m Añadido telefonos en resumen para su descarga en deudas
+[33m71d7c88[m Añadido build olvidado
+[33mc83b3ce[m Mejorado el responsive para tablets y telefonos
+[33m83f1c8f[m Mejorado el responsive
+[33m74ccc4e[m Ya se ve por el puerto 3000
+[33m1598fd3[m cambiado el axios direccion
+[33m7c0d623[m olvidado el dist
+[33m02990ec[m Añadido api a las direcciones
+[33me79a8f5[m Añadido las API rutas
+[33m83d9f18[m Añadido dist para el server AWS
+[33m3717052[m Agregado a los tabs 'Cantidad'
+[33me0b82cb[m Frontend funcional, Resumen, Tablas y Crud

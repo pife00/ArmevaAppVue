@@ -319,6 +319,7 @@ export default {
     descargasDeuda(categoria) {
       var filtro = [];
       var ultimateFilter = [];
+      
 
       if (this.datos.length > 0) {
         filtro = this.datos.filter((data) => {
@@ -326,11 +327,36 @@ export default {
         });
 
         for (let i = 0; i < filtro.length; i++) {
+           var temporal = this.FechaLocal(filtro[i].Fecha); 
+           
+           filtro[i].Fechas = temporal;
+        }
+       
+
+        for (let i = 0; i < filtro.length; i++) {
           for (let j = 0; j < this.user.length; j++) {
             if (filtro[i].Nombre == this.user[j].Nombre) {
-              filtro[i].Telefono = this.user[j].Telefono;       
+              filtro[i].Telefono = this.user[j].Telefono;   
             }         
           }
+        }
+
+        for (let i = 0; i < filtro.length; i++) {
+          for (let j = 0; j < this.user.length; j++) {
+            if(filtro[i].Nombre == this.user[j].Nombre){
+               for (let k = 0; k < this.user[j].Actividad.length; k++) {
+                if(filtro[i]._id == this.user[j].Actividad[k]._id){
+                  if(this.user[j].Actividad[k].Abono.length >0
+                  && this.user[j].Actividad[k].Deuda == "Activa"
+                  ){
+                    filtro[i].Abono =
+                    this.SumaTotalDeuda(this.user[j].Actividad[k].Abono);
+                  }
+                }
+              }    
+            }
+          }
+          
         }
         
 
@@ -339,9 +365,10 @@ export default {
             Nombre: x.Nombre,
             Productos: x.Productos,
             Precio: x.Precio,
+            Abono:x.Abono,
             "#": x.Cantidad,
             Telefono: x.Telefono,
-            Fecha: x.Fecha,
+            Fecha: x.Fechas,
           };
         });
 

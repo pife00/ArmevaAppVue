@@ -181,9 +181,8 @@ if (store.state.RegistroElegido != []) {
       }
     },
     "Datos.Precio"() {
-      //this.PrecioReal = this.NumeroReal(this.Datos.Precio);
-     // this.Datos.Precio = this.NumeroFalso;
-     this.Datos.Precio = this.NumeroSinPuntos(this.Datos.Precio)
+     this.Datos.Precio = this.NumeroFalso;    
+
      if(this.Datos.Precio != ''){
        this.notificacion[0].Precio = false;
      }
@@ -253,13 +252,13 @@ if (store.state.RegistroElegido != []) {
         this.notificacion[0].Cantidad == false
       }
     },
-   /* NumeroFalso() {
+    NumeroFalso() {
       var numero = this.NumeroSinPuntos(this.Datos.Precio);
       return this.MonedaLocal(numero);
     },
     NumeroReal() {
       return this.NumeroSinPuntos(this.NumeroFalso);
-    },*/
+    },
   },
   methods: {
 
@@ -289,7 +288,7 @@ if (store.state.RegistroElegido != []) {
               .post("/getData", {
                 Nombre: this.Datos.Nombre,
                 Productos: this.Datos.Productos,
-                Precio: this.Datos.Precio,
+                Precio: this.NumeroReal,
                 Cantidad: this.Datos.Cantidad,
                 Categoria: this.Datos.Categoria,
                 Telefono: "No datos",
@@ -314,7 +313,7 @@ if (store.state.RegistroElegido != []) {
               Nombre: this.Datos.Nombre,
               Productos: this.Datos.Productos,
               Cantidad: this.Datos.Cantidad,
-              Precio: this.Datos.Precio,
+              Precio: this.NumeroReal,
               Categoria: this.Datos.Categoria,
               
             })
