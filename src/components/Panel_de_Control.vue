@@ -65,8 +65,8 @@
       <div class="level-right">
         <div class="level-item">
           <div class="select is-medium">
-            <select v-model="Modo">
-              <option  value="usuarios">Usuarios</option>
+            <select @click="BorrarNombre()" v-model="Modo">
+              <option value="usuarios">Usuarios</option>
               <option value="registros">Registros</option>
             </select>
           </div>
@@ -110,7 +110,7 @@ export default {
   
   data() {
     return {
-      Datos:[],
+      Datos:{Nombre:''},
       UsuarioExiste: null,
       UsuarioElegido:"",
       RegistroElegido:"",
@@ -120,49 +120,6 @@ export default {
       UsuariosParciales: [],
       Modo: "",
       Orden:"Total",
-      configuracion_usuarios: [
-        {
-          clave: "Nombre",
-          titulo: "Nombre",
-        },
-        {
-          clave: "Telefono",
-          titulo: "Telefono",
-        },
-        {
-          clave: "Direccion",
-          titulo: "Direccion",
-        },
-        {
-          clave: "Oficio",
-          titulo: "Oficio",
-        },
-      ],
-
-      configuracion_registro: [
-        {
-          clave: "Nombre",
-          titulo: "Nombre",
-        },
-        {
-          clave: "Productos",
-          titulo: "Productos",
-        },
-        {
-          clave: "Precio",
-          titulo: "Precio",
-        },
-        {
-          clave: "Cantidad",
-          titulo: "#",
-        },
-        {
-          clave: "Fecha",
-          titulo: "Fecha",
-        },
-      ],
-
-
     };
   },
 
@@ -173,6 +130,7 @@ export default {
   watch: {
 
     'Datos.Nombre'(){
+      
       if(store.state.ModoTabla == 'usuarios'){      
           if(this.UsuarioElegido == "" ){
             this.BuscarUsuario(); 
@@ -198,16 +156,28 @@ export default {
     },
 
     Modo(){
+     
       if(this.Modo == "usuarios"){
         store.state.ModoTabla = 'usuarios'
+        
       }
       if(this.Modo == "registros"){
         store.state.ModoTabla = 'registros'
+        
       }
     }
   },
   methods: {
-    
+
+    BorrarNombre(){
+      this.Datos.Nombre = '';
+      this.MostrarListaUsuarios = false
+      this.UsuarioExiste = null
+      this.UsuarioElegido = '';
+      store.state.UsuarioParcial = ""
+      store.state.RegistroParcial = ""
+    },
+
     AñadirRegistro(){
      
         store.state.RegistroNuevo = true,

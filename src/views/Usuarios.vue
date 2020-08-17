@@ -68,6 +68,14 @@ export default {
           titulo: "Nombre",
         },
         {
+          clave: 'Ingresos',
+          titulo:'Ingresos',
+        },
+        {
+          clave:'Deuda',
+          titulo:'Deuda',
+        },
+        {
           clave: "Telefono",
           titulo: "Telefono",
         },

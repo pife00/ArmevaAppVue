@@ -2,4 +2,22 @@ table{
     &:hover{
         cursor: pointer;
     }
+    tbody{
+      tr{
+        td{
+          border: 0;
+        }
+      }
+    }
+    
 }
+
+table#Usuarios td:nth-child(2){
+    color:$success;
+    font-weight: bold;
+  }
+
+  table#Usuarios td:nth-child(3){
+    color:$grey-light;
+    font-weight: bold;
+  }

@@ -202,12 +202,14 @@ export const mixins = {
           }
         }
         this.RegistrosParciales = resultado;
-        store.state.RegistroParcial = resultado ;
-        this.MostrarListaRegistros = true; 
+      //  store.state.RegistroParcial = resultado ;
+       this.MostrarListaRegistros = true; 
       }else{
         this.MostrarListaRegistros = false;
         store.state.RegistroParcial = "";
       }
+      //console.log(resultado);
+      
         
 
      if(datos.length > 0){
@@ -246,7 +248,7 @@ export const mixins = {
       this.UsuarioExiste = true;
       this.Datos.Nombre = data.Nombre;
       this.UsuarioElegido = data.Nombre;
-      store.state.RegistroParcial = data;
+      //store.state.UsuarioParcial = data;
     },
 
     ModalUsuarioSeleccionado(data) {
@@ -281,6 +283,16 @@ export const mixins = {
 
       for (let i = 0; i < data.length; i++) {  
         total += this.NumeroSinPuntos(data[i].Precio);
+      }
+
+      return total;
+    },
+
+    SumaTotalSinPuntos(data){
+      var total = 0;
+
+      for (let i = 0; i < data.length; i++) {  
+        total += data[i].Precio;
       }
 
       return total;

@@ -13,8 +13,9 @@
 
     <table
       :id="modo"
+      
       v-if="datos.length>0"
-      class="table is-bordered table is-hoverable is-fullwidth"
+      class="table is-hoverable is-fullwidth"
     >
       <thead>
         <tr>
@@ -24,7 +25,7 @@
       </thead>
       <tbody>
         <tr v-for="objetos in Paginacion" :key="objetos._id">
-          <td
+          <td 
             @click="EditarDatos(objetos)"
             v-for="columna in configuracion"
             :key="columna.clave"
@@ -123,10 +124,38 @@ export default {
         if (this.modo == "Usuarios") {
           if(store.state.UsuarioParcial == ""){
             var Datos = [{}];
+            var filtroI = [{}];
+            var filtroD = [{}];
+            var TotalFiltro = [];
+  
+          for (let i = 0; i < this.datos.length; i++) {
+            filtroI[i] = this.datos[i].Actividad.filter((a) => {
+            return a.Categoria == "Ingresos";
+            });
+          }
+
+         for (let i = 0; i < this.datos.length; i++) {
+            filtroD[i] = this.datos[i].Actividad.filter((a) => {
+            return a.Categoria == "Deuda";
+            });
+          }
+          
+
+          for (let i = 0; i < filtroI.length; i++) {
+            filtroI[i] = this.MonedaLocal(this.SumaTotalSinPuntos(filtroI[i]));
+          }
+
+          for (let i = 0; i < filtroI.length; i++) {
+            var D = this.MonedaLocal(this.SumaTotalSinPuntos(filtroD[i]));
+            filtroD[i] = D
+          }
+
           for (let i = 0; i < this.datos.length; i++) {
             Datos[i] = {
               _id: this.datos[i]._id,
               Nombre: this.datos[i].Nombre,
+              Ingresos:filtroI[i],
+              Deuda:filtroD[i],
               Telefono: this.datos[i].Telefono,
               Direccion: this.datos[i].Direccion,
               Oficio: this.datos[i].Oficio,
