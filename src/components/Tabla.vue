@@ -1,22 +1,20 @@
 <template>
   <div>
-      <nav class="pagination" role="navigation" aria-label="pagination">
-        <ul v-if="PaginaTotal > 0" class="pagination-list">
-          <li v-for="PaginaNumero in PaginaTotal" :key="PaginaNumero">
-            <a :key="PaginaNumero" class="pagination-link" 
-            @click="PaginaElegida(PaginaNumero)" href="#"
+    <nav class="pagination" role="navigation" aria-label="pagination">
+      <ul v-if="PaginaTotal > 0" class="pagination-list">
+        <li v-for="PaginaNumero in PaginaTotal" :key="PaginaNumero">
+          <a
+            :key="PaginaNumero"
+            class="pagination-link"
+            @click="PaginaElegida(PaginaNumero)"
+            href="#"
             :class="{'is-current':PaginaCorriente == PaginaNumero}"
-            >{{PaginaNumero}}</a>
-          </li>
-        </ul>
-      </nav>
+          >{{PaginaNumero}}</a>
+        </li>
+      </ul>
+    </nav>
 
-    <table
-      :id="modo"
-      
-      v-if="datos.length>0"
-      class="table is-hoverable is-fullwidth"
-    >
+    <table :id="Modo" v-if="datos.length>0" class="table is-hoverable is-fullwidth">
       <thead>
         <tr>
           <th v-for="columna in configuracion" :key="columna.clave">{{columna.titulo}}</th>
@@ -25,7 +23,7 @@
       </thead>
       <tbody>
         <tr v-for="objetos in Paginacion" :key="objetos._id">
-          <td 
+          <td
             @click="EditarDatos(objetos)"
             v-for="columna in configuracion"
             :key="columna.clave"
@@ -39,29 +37,28 @@
           </td>
         </tr>
       </tbody>
-      <tfoot v-if="modo != 'Usuarios'">
+      <tfoot v-if="Modo != 'Usuarios'">
         <tr>
           <th>Total</th>
           <th></th>
-          <th>{{MonedaLocal(SumaTotal(Datos_de_Tabla))}}</th>
+          <th v-if="Datos_de_Tabla.length >1">{{MonedaLocal(SumaTotal(Datos_de_Tabla,''))}}</th>
+          <th>{{SumaTotal(Datos_de_Tabla,'Cantidad')}}</th>
         </tr>
       </tfoot>
     </table>
 
-  
-
     <Modal_Eliminar
-      modo="usuario"
+      Modo="usuario"
       :datos="DatosModalEliminar"
       v-if="$store.state.ModalEliminar == 'usuario'"
     ></Modal_Eliminar>
     <Modal_Eliminar
-      modo="registro"
+      Modo="registros"
       :datos="DatosModalEliminar"
       v-if="$store.state.ModalEliminar == 'registro'"
     ></Modal_Eliminar>
     <Modal_Eliminar
-      modo="tabs"
+      Modo="tabs"
       :datos="DatosModalEliminar"
       v-if="$store.state.ModalEliminar == 'tabs'"
     ></Modal_Eliminar>
@@ -80,12 +77,12 @@ export default {
   props: {
     datos: Array,
     configuracion: Array,
-    modo: String,
+    Modo: String,
   },
   data() {
     return {
       DatosModalEliminar: [],
-      UsuarioElegido:[],
+      UsuarioElegido: [],
       PaginaCorriente: 1,
       ObjetosPorPagina: 50,
       Conteo: 0,
@@ -95,93 +92,47 @@ export default {
 
   created() {},
   watch: {
-    Datos_de_Tabla(){
-      if(store.state.UsuarioElegido == []){
-        
-      }else{
-        
+    Datos_de_Tabla() {
+      if (store.state.UsuarioElegido == []) {
+      } else {
       }
-      
+
+      if (this.PaginaCorriente == 0 && this.Datos_de_Tabla.length > 0) {
+        this.PaginaCorriente = 1;
+      }
     },
-
-    OrdenBusquedaParcial(){
-
-    },
-
   },
   computed: {
     Datos_de_Tabla: {
       get: function (value) {
-        if (this.modo == "Registro") {
-          if(store.state.RegistroParcial == ""){
-            return this.TablaOrdenRegistro(this.Orden,'Categoria');
-          }else{
-            return store.state.RegistroParcial;
-          }
-           
+        if (this.Modo == "Registros") {
+          return this.TablaOrdenRegistro(
+            store.state.OrdenRegistro,
+            "Categoria",
+            store.state.RegistroBusqueda
+          );
         }
 
-        if (this.modo == "Usuarios") {
-          if(store.state.UsuarioParcial == ""){
-            var Datos = [{}];
-            var filtroI = [{}];
-            var filtroD = [{}];
-            var TotalFiltro = [];
-  
-          for (let i = 0; i < this.datos.length; i++) {
-            filtroI[i] = this.datos[i].Actividad.filter((a) => {
-            return a.Categoria == "Ingresos";
-            });
-          }
-
-         for (let i = 0; i < this.datos.length; i++) {
-            filtroD[i] = this.datos[i].Actividad.filter((a) => {
-            return a.Categoria == "Deuda";
-            });
-          }
-          
-
-          for (let i = 0; i < filtroI.length; i++) {
-            filtroI[i] = this.MonedaLocal(this.SumaTotalSinPuntos(filtroI[i]));
-          }
-
-          for (let i = 0; i < filtroI.length; i++) {
-            var D = this.MonedaLocal(this.SumaTotalSinPuntos(filtroD[i]));
-            filtroD[i] = D
-          }
-
-          for (let i = 0; i < this.datos.length; i++) {
-            Datos[i] = {
-              _id: this.datos[i]._id,
-              Nombre: this.datos[i].Nombre,
-              Ingresos:filtroI[i],
-              Deuda:filtroD[i],
-              Telefono: this.datos[i].Telefono,
-              Direccion: this.datos[i].Direccion,
-              Oficio: this.datos[i].Oficio,
-              Actividad: this.datos[i].Actividad,
-            };
-          }
-          return Datos;
-          }else{
-            return store.state.UsuarioParcial;
-          }
-
-          
+        if (this.Modo == "Usuarios") {
+          return this.TablaOrdenUsuario(
+            store.state.OrdenUsuario,
+            "Categoria",
+            store.state.UsuarioBusqueda
+          );
         }
 
-        if(this.modo == "Tabs"){
+        if (this.Modo == "Tabs") {
           var Datos = [{}];
           for (let i = 0; i < this.datos.length; i++) {
             Datos[i] = {
               _id: this.datos[i]._id,
               Nombre: this.datos[i].Nombre,
               Productos: this.datos[i].Productos,
-              Precio:this.MonedaLocal(this.datos[i].Precio),
-              Abono:this.MonedaLocal(this.datos[i].Abono),
-              Categoria:this.datos[i].Categoria,
-              Cantidad:this.datos[i].Cantidad,
-              Fecha:this.FechaLocal(this.datos[i].Fecha),
+              Precio: this.MonedaLocal(this.datos[i].Precio),
+              Abono: this.MonedaLocal(this.datos[i].Abono),
+              Categoria: this.datos[i].Categoria,
+              Cantidad: this.datos[i].Cantidad,
+              Fecha: this.FechaLocal(this.datos[i].Fecha),
             };
           }
           return Datos;
@@ -191,7 +142,12 @@ export default {
     },
 
     Orden() {
-      return store.state.OrdenRegistro;
+      if (this.Modo == "Registros") {
+        return store.state.OrdenRegistro;
+      }
+      if (this.Modo == "Usuarios") {
+        return store.state.OrdenUsuario;
+      }
     },
 
     PaginaTotal() {
@@ -206,41 +162,40 @@ export default {
         this.PaginaCorriente * this.ObjetosPorPagina - this.ObjetosPorPagina;
       return this.Datos_de_Tabla.slice(indice, indice + this.ObjetosPorPagina);
     },
-
   },
   methods: {
-    PaginaElegida(PaginaNumero){
+    PaginaElegida(PaginaNumero) {
       this.PaginaCorriente = PaginaNumero;
     },
 
     ModalEliminar(data) {
-      if (this.modo == "Usuarios") {
+      if (this.Modo == "Usuarios") {
         this.DatosModalEliminar = data;
         store.state.ModalEliminar = "usuario";
       }
-      if (this.modo == "Registro") {
+      if (this.Modo == "Registros") {
         this.DatosModalEliminar = data;
         store.state.ModalEliminar = "registro";
       }
 
-      if (this.modo == "Tabs") {
+      if (this.Modo == "Tabs") {
         this.DatosModalEliminar = data;
         store.state.ModalEliminar = "tabs";
       }
     },
 
     EditarDatos(data) {
-      if (this.modo == "Usuarios") {
+      if (this.Modo == "Usuarios") {
         store.state.UsuarioElegido = data;
-        this.UsuarioElegido =  data;
+        this.UsuarioElegido = data;
         store.state.ModoTabla = "";
-        store.state.UsuarioPerfil = "editar_usuario";
+        store.state.UsuarioPerfil = "Editar_Usuario";
       }
-      if (this.modo == "Registro") {
+      if (this.Modo == "Registros") {
         store.state.RegistroElegido = data;
         store.state.Registro_Actividad = true;
       }
-      if (this.modo == "Tabs") {
+      if (this.Modo == "Tabs") {
         store.state.RegistroElegido = data;
         store.state.Registro_Actividad = true;
       }

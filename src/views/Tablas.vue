@@ -11,24 +11,24 @@
     </div>
 
     <div class="column">
-    <Tabla v-if="$store.state.ModoTabla == 'usuarios'"
+    <Tabla v-if="$store.state.ModoTabla == 'Usuarios'"
     :datos="DataBaseUser" 
     :configuracion="configuracion_usuarios" 
-    modo="Usuarios"></Tabla>
+    Modo="Usuarios"></Tabla>
 
-    <Tabla v-if="$store.state.ModoTabla == 'registros'"
+    <Tabla v-if="$store.state.ModoTabla == 'Registros'"
     :datos="DataBase" 
     :configuracion="configuracion_registros" 
-    modo="Registro"></Tabla>
+    Modo="Registros"></Tabla>
     </div>
 
-    <Usuario_Perfil v-if="$store.state.UsuarioPerfil == 'nuevo_usuario'" 
-    modo="Nuevo Usuario" 
+    <Usuario_Perfil v-if="$store.state.UsuarioPerfil == 'Nuevo_Usuario'" 
+    Modo="Nuevo Usuario" 
     :usuario="$store.state.UsuarioElegido">
     </Usuario_Perfil>
 
-    <Usuario_Perfil v-if="$store.state.UsuarioPerfil == 'editar_usuario'" 
-     modo="Editar Usuario" 
+    <Usuario_Perfil v-if="$store.state.UsuarioPerfil == 'Editar_Usuario'" 
+     Modo="Editar Usuario" 
     :usuario="$store.state.UsuarioElegido">
     </Usuario_Perfil>
 

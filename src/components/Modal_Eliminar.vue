@@ -26,13 +26,13 @@
   </div>
 </template>
 <script>
-import store from '../store/index'
+import store from "../store/index";
 export default {
   name: "Modal_Eliminar",
-  props: ["datos", "modo"],
+  props: ["datos", "Modo"],
   methods: {
     Eliminar() {
-      if (this.modo == "usuario") {
+      if (this.Modo == "usuario") {
         console.log(this.datos);
         this.axios
           .post("/getDeleteUser", {
@@ -44,7 +44,7 @@ export default {
             this.Cerrar();
           });
       }
-      if (this.modo == "registro") {
+      if (this.Modo == "registros") {
         this.axios
           .post("/getDelete", {
             id: this.datos._id,
@@ -56,18 +56,15 @@ export default {
             this.Cerrar();
           });
       }
-      if (this.modo == "tabs") {
+      if (this.Modo == "tabs") {
         this.axios
           .post("/getDelete", {
             id: this.datos._id,
             Nombre: this.datos.Nombre,
           })
           .then((result) => {
-           
-              store.state.UsuarioPerfil = null;
-              store.state.ModoTabla = "usuarios";
-            
-
+            store.state.UsuarioPerfil = null;
+            store.state.ModoTabla = "Usuarios";
             this.$store.commit("loadDataBase");
             this.$store.commit("loadDataBaseUser");
             this.Cerrar();

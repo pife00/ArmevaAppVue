@@ -2,14 +2,16 @@ table{
     &:hover{
         cursor: pointer;
     }
-    tbody{
+    font-weight: bold;
+    thead{
       tr{
-        td{
-          border: 0;
+        th{
+          font-weight: 500;
+          color:$grey-light
         }
       }
     }
-    
+        
 }
 
 table#Usuarios td:nth-child(2){
@@ -17,7 +19,22 @@ table#Usuarios td:nth-child(2){
     font-weight: bold;
   }
 
+  table#Usuarios td:nth-child(1){
+    color:$link;
+    font-weight: bold;
+  }
+
   table#Usuarios td:nth-child(3){
     color:$grey-light;
+    font-weight: bold;
+  }
+
+  table#Registros td:nth-child(1){
+    color:$link;
+    font-weight: bold;
+  }
+
+  table#Registros td:nth-child(5){
+    
     font-weight: bold;
   }

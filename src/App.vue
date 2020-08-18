@@ -22,7 +22,7 @@
         <div class="navbar-start">
           <router-link class="navbar-item" to="/">Resumen</router-link>
 
-          <router-link class="navbar-item" to="/usuarios">Usuarios</router-link>
+          <router-link class="navbar-item" to="/tablas">Tablas</router-link>
         </div>
       </div>
     </div>

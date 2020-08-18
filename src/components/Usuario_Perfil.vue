@@ -15,7 +15,7 @@
           <div class="column">
             <div class="columm">
               <div class="field">
-                <p class="title">{{modo}}</p>
+                <p class="title">{{Modo}}</p>
                 <input v-model="Datos._id" class="input" style="border:none" type="text" />
                 <p v-if="notificacion.Nombre == true" class="has-text-danger">Por lo menos nombre debe ser llenado</p>
                 <label class="label">Nombre:</label>
@@ -51,15 +51,15 @@
     </div>
 
     <div v-show="tabActive == 1">
-      <Tabla :datos="tabIngresos" modo="Tabs" :configuracion="configuracion_ingresos_egresos"></Tabla>
+      <Tabla :datos="tabIngresos" Modo="Tabs" :configuracion="configuracion_ingresos_egresos"></Tabla>
     </div>
 
     <div v-show="tabActive == 2">
-      <Tabla :datos="tabEgresos" modo="Tabs" :configuracion="configuracion_ingresos_egresos"></Tabla>
+      <Tabla :datos="tabEgresos" Modo="Tabs" :configuracion="configuracion_ingresos_egresos"></Tabla>
     </div>
 
     <div v-show="tabActive == 3">
-      <Tabla :datos="tabDeuda" modo="Tabs" :configuracion="configuracion_deuda"></Tabla>
+      <Tabla :datos="tabDeuda" Modo="Tabs" :configuracion="configuracion_deuda"></Tabla>
     </div>
   </div>
 </template>
@@ -71,7 +71,7 @@ export default {
   components: {
     Tabla,
   },
-  props: ["usuario", "modo"],
+  props: ["usuario", "Modo"],
   data() {
     return {
       notificacion: { Nombre: null },
@@ -111,13 +111,13 @@ export default {
           clave: "Precio",
           titulo: "Precio",
         },
+         {
+          clave: "Cantidad",
+          titulo: "#",
+        },
         {
           clave: "Abono",
           titulo: "Abono",
-        },
-        {
-          clave: "Cantidad",
-          titulo: "#",
         },
         {
           clave: "Fecha",
@@ -168,9 +168,9 @@ export default {
   },
 
   created() {
-    if (this.modo == "Nuevo Usuario") {
+    if (this.Modo == "Nuevo Usuario") {
     }
-    if (this.modo == "Editar Usuario") {
+    if (this.Modo == "Editar Usuario") {
       this.DatosReactivos = this.usuario;
       this.universalTabs();
     }
@@ -179,7 +179,7 @@ export default {
   methods: {
     Cerrar() {
       store.state.UsuarioPerfil = null;
-      store.state.ModoTabla = "usuarios";
+      store.state.ModoTabla = "Usuarios";
     },
 
     tabSeleccionada(select) {
@@ -220,7 +220,7 @@ export default {
 
     EnvioDatos() {
       if (this.notificacion.Nombre == false) {
-        if (this.modo == "Nuevo Usuario") {
+        if (this.Modo == "Nuevo Usuario") {
           this.axios
             .post("/newUser", {
               Nombre: this.Datos.Nombre,
@@ -239,7 +239,7 @@ export default {
             })
             .catch((err) => {});
         }
-        if (this.modo == "Editar Usuario") {
+        if (this.Modo == "Editar Usuario") {
           this.axios
             .post("/getUpdateUser", {
               _id: this.Datos._id,

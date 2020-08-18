@@ -25,8 +25,13 @@ export default new Vuex.Store({
         UsuarioPerfil:false,
         Registro_Actividad:false,
         OrdenRegistro:"Total",
+        OrdenUsuario:"A-Z",
         UsuarioParcial:"",
         RegistroParcial:"",
+
+        RegistroBusqueda:'',
+        UsuarioBusqueda:'',
+        
 
     },
     actions: {

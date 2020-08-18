@@ -45,14 +45,16 @@
           <p>Orden</p>
         </div>
         <div class="level-item">
-          <div v-if="$store.state.ModoTabla == 'usuarios'" class="select is-info">
-            <select >
+          <div v-if="$store.state.ModoTabla == 'Usuarios'" class="select is-info">
+            <select v-model="$store.state.OrdenUsuario" >
               <option value="A-Z">A-Z</option>
+              <option value="Ingresos">Ingresos</option>
+              <option value="Deuda">Deuda</option>
             </select>
           </div>
 
-          <div  v-if="$store.state.ModoTabla == 'registros'" class="select is-info">
-            <select v-model="Orden" >
+          <div  v-if="$store.state.ModoTabla == 'Registros'" class="select is-info">
+            <select v-model="$store.state.OrdenRegistro"  >
               <option value="Total">Total</option>
               <option value="Ingresos">Ingresos</option>
               <option value="Egresos">Egresos</option>
@@ -73,14 +75,14 @@
         </div>
         <div class="level-item">
 
-          <button @click="AñadirUsuario()" v-if="$store.state.ModoTabla == 'usuarios'" class="button is-info">
+          <button @click="AñadirUsuario()" v-if="$store.state.ModoTabla == 'Usuarios'" class="button is-info">
             <span class="icon">
               <i class="fas fa-user-plus"></i>
             </span>
             <span>Añadir</span>
           </button>
 
-          <button @click="AñadirRegistro()" v-if="$store.state.ModoTabla == 'registros'" class="button is-info">
+          <button @click="AñadirRegistro()" v-if="$store.state.ModoTabla == 'Registros'" class="button is-info">
             <span class="icon">
               <i class="far fa-address-book"></i>
             </span>
@@ -119,7 +121,6 @@ export default {
       RegistrosParciales:[],
       UsuariosParciales: [],
       Modo: "",
-      Orden:"Total",
     };
   },
 
@@ -131,7 +132,8 @@ export default {
 
     'Datos.Nombre'(){
       
-      if(store.state.ModoTabla == 'usuarios'){      
+      if(store.state.ModoTabla == 'Usuarios'){  
+        store.state.UsuarioBusqueda = this.Datos.Nombre    
           if(this.UsuarioElegido == "" ){
             this.BuscarUsuario(); 
           }else{
@@ -140,9 +142,10 @@ export default {
           }
       }
 
-      if(store.state.ModoTabla == 'registros'){
+      if(store.state.ModoTabla == 'Registros'){
+        store.state.RegistroBusqueda = this.Datos.Nombre;
         if(this.RegistroElegido == ""){
-          this.BuscarRegistro();
+          //this.BuscarRegistro(this.Datos.Nombre);
         }
         
       }else{
@@ -152,17 +155,23 @@ export default {
     },
 
     Orden(){
-      store.state.OrdenRegistro = this.Orden
+      if(this.Modo == 'Registros'){
+        store.state.OrdenRegistro = this.Orden
+      }
+      if(this.Modo == 'Usuarios'){
+        store.state.OrdenUsuario = this.Orden
+      }
+      
     },
 
     Modo(){
      
       if(this.Modo == "usuarios"){
-        store.state.ModoTabla = 'usuarios'
+        store.state.ModoTabla = 'Usuarios'
         
       }
       if(this.Modo == "registros"){
-        store.state.ModoTabla = 'registros'
+        store.state.ModoTabla = 'Registros'
         
       }
     }
@@ -187,7 +196,7 @@ export default {
     AñadirUsuario(){
         store.state.ModoTabla = "";
         store.state.UsuarioNuevo = true,
-        store.state.UsuarioPerfil = 'nuevo_usuario';
+        store.state.UsuarioPerfil = 'Nuevo_Usuario';
     }
   },
   

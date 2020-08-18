@@ -239,9 +239,11 @@
   </div>
 </template>
 
+
 <script>
 import store from "../store/index";
 import { mixins } from "../mixins";
+
 export default {
   name: "Resumen",
   store,
@@ -252,6 +254,31 @@ export default {
   },
   data() {
     return {
+      fields: [
+            {
+              'title': '#',
+              'name': 'id', 
+            },
+            {
+              'title': 'Nombre',
+              'name': 'name', 
+            },
+            {
+              'title': 'Ciudad',
+              'name': 'city', 
+            },
+            {
+              'title': 'País',
+              'name': 'country', 
+            },
+            {
+              'title': 'birthdate',
+              'name': 'F. Nacimiento',
+              'type': 'Date',
+              'format': 'DD/MM/YYYY'
+            }
+        ],
+
       Fecha: store.state.Fecha,
       chartTotal: false,
       TotalIngresos: [],
