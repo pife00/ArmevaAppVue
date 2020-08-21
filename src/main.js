@@ -6,24 +6,18 @@ import VueAxios from 'vue-axios';
 import store from './store/index';
 import '@fortawesome/fontawesome-free/css/all.css';
 import '@fortawesome/fontawesome-free/js/all.js';
-import VModal from 'vue-js-modal';
+
 import Chartkick from 'vue-chartkick';
 import Chart from 'chart.js';
-import JsonCSV from 'vue-json-csv';
+
 import excel from 'vue-excel-export';
-import VueGoogleCharts from 'vue-google-charts';
-import JsonExcel from 'vue-json-excel';
+
 
 Vue.use(excel);
 
-Vue.component('downloadExcel', JsonExcel);
-Vue.use(VueGoogleCharts);
-Vue.use(Chartkick);
+
 Vue.use(Chartkick.use(Chart));
 Vue.use(VueAxios, axios);
-Vue.use(VModal);
-Vue.component('downloadCsv', JsonCSV);
-
 axios.defaults.baseURL= "http://ec2-3-128-34-113.us-east-2.compute.amazonaws.com:3000/api";
 //axios.defaults.baseURL ="http://localhost:3000/api";
 Vue.config.productionTip = false;
