@@ -6,10 +6,8 @@ import VueAxios from 'vue-axios';
 import store from './store/index';
 import '@fortawesome/fontawesome-free/css/all.css';
 import '@fortawesome/fontawesome-free/js/all.js';
-
 import Chartkick from 'vue-chartkick';
 import Chart from 'chart.js';
-
 import excel from 'vue-excel-export';
 
 
