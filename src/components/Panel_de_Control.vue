@@ -7,6 +7,10 @@
         <div class="level-item">
           <div class="field has-addons">
             <div class="control">
+              <p v-if="usuarios.length>0 && Modo == 'usuarios' " 
+                ><strong style="font-size:1.1em;">Usuarios:</strong> {{usuarios.length}}</p>
+                <p v-if="registro.length>0 && Modo == 'registros'" 
+                ><strong style="font-size:1.1em;">Registros:</strong> {{registro.length}}</p>
               <input
                 v-model="Datos.Nombre"
                 class="input"

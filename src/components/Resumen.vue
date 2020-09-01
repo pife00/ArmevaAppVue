@@ -305,10 +305,6 @@ export default {
     },
   },
 
-  created() {
-    store.commit("loadDataBaseUser");
-  },
-
   methods: {
     Porcentaje() {},
     descargas(valor, criterio, categoria) {
