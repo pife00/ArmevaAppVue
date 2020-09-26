@@ -13,7 +13,6 @@ export default new Vuex.Store({
         RegistroNuevo:false,
         ModoTabla:"usuarios",
         ModalEliminar:false,
-
         Fecha: [new Date().getMonth() + 1, new Date().getFullYear()],
        // Fecha: [7, new Date().getFullYear()],
         ModalAñadir: false,

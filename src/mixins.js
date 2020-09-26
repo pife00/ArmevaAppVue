@@ -28,9 +28,9 @@ export const mixins = {
         hour12: false,
         timeZone: "America/Bogota",
       };
-      return (fecha = new Intl.DateTimeFormat("es-Co", options).format(
-        new Date(data)
-      ));
+      fecha = new Intl.DateTimeFormat("es-Co", options).format(new Date(data));
+      console.log(fecha);
+      return fecha;
     },
 
     TablaFiltroUsuario(orden,array){

@@ -23,6 +23,7 @@
           <router-link class="navbar-item" to="/">Resumen</router-link>
 
           <router-link class="navbar-item" to="/tablas">Tablas</router-link>
+          <router-link class="navbar-item" to="/">Comida</router-link>
         </div>
       </div>
     </div>
