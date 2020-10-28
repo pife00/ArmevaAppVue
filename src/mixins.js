@@ -29,7 +29,7 @@ export const mixins = {
         timeZone: "America/Bogota",
       };
       fecha = new Intl.DateTimeFormat("es-Co", options).format(new Date(data));
-      console.log(fecha);
+      //console.log(fecha);
       return fecha;
     },
 

@@ -45,7 +45,10 @@
       <div class="column">
         <div class="box">
           <p class="heading">Ingresos</p>
-          <p class="title ingresos">{{MonedaLocal(resumen(this.balance,'Ingresos'))}}</p>
+          <p v-if="MonedaLocal(resumen(this.balance,'Ingresos')) != 0"  
+          class="title ingresos">{{MonedaLocal(resumen(this.balance,'Ingresos'))}}</p>
+
+          <p v-else class="title ingresos">Esperando</p>
         </div>
         <div class="box">
           <p class="heading">Egresos</p>
@@ -415,7 +418,7 @@ export default {
         }
         return element;
       } else {
-        return msg;
+        return false;
       }
     },
 
